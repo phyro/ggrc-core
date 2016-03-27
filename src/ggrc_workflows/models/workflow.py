@@ -140,7 +140,7 @@ class Workflow(mixins.CustomAttributable, HasOwnContext, mixins.Timeboxed,
 
   _aliases = {
       "frequency": {
-          "display_name": "Frequency",
+          "display_name": "Repeats",
           "mandatory": True,
       },
       "notify_custom_message": "Custom email message",
