@@ -52,7 +52,7 @@
       <div class="row-fluid inner-hide">
         <div data-id="frequency_hidden" class="span12 hidable">
           <label>
-            Frequency
+            Repeats
             <i class="fa fa-question-circle" rel="tooltip" title="Choose frequency"></i>
             <a data-id="hide_frequency_hidden_lk" href="javascript://" class="field-hide" tabindex="-1">hide</a>
           </label>
@@ -80,17 +80,9 @@
   {{{render_hooks "Workflow.storage_folder_picker"}}}
 
   {{#if new_object_form}}
-  <div class="row-fluid">
-    <div data-id="first_task_group_title_hidden" class="span8 hidable">
-      <label>
-        First task group's title
-        <i class="fa fa-question-circle" rel="tooltip" title="The name of the first task group"></i>
-        <a data-id="hide_first_task_group_title_lk" href="javascript://" class="field-hide" tabindex="-1">hide</a>
-      </label>
-      <input data-id="first_task_group_title_chkbx" class="input-block-level" placeholder="Enter Title" name="task_group_title" type="text" tabindex="7" value="Task Group 1" autofocus>
-      <br>
-    </div>
-  </div>
+    <input data-id="first_task_group_title_chkbx" class="input-block-level"
+     placeholder="Enter Title"name="task_group_title" type="hidden" tabindex="7"
+     value="Task Group 1" autofocus>
   {{/if}}
 
   <div class="row-fluid">

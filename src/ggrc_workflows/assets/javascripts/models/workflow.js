@@ -49,7 +49,7 @@
         {attr_title: 'Manager', attr_name: 'owner', attr_sort_field: ''},
         {attr_title: 'Code', attr_name: 'slug'},
         {attr_title: 'State', attr_name: 'status'},
-        {attr_title: 'Frequency', attr_name: 'frequency'},
+        {attr_title: 'Repeats', attr_name: 'frequency'},
         {attr_title: 'Last Updated', attr_name: 'updated_at'}
       ]
     },
@@ -77,29 +77,33 @@
           });
         }
       });
-    },
+    }
   }, {
-    save : function() {
-      var that = this,
-          task_group_title = this.task_group_title,
-          redirect_link;
+    save: function () {
+      var that = this;
+      var taskGroupTitle = this.task_group_title;
+      var redirectLink;
 
-      return this._super.apply(this, arguments).then(function(instance) {
-        redirect_link = instance.viewLink + "#task_group_widget";
-        if (!task_group_title) {
-          instance.attr('_redirect', redirect_link);
+      return this._super.apply(this, _.toArray(arguments)).then(function (instance) {
+        var tg;
+
+        redirectLink = instance.viewLink + "#task_group_widget";
+        if (!taskGroupTitle) {
+          instance.attr('_redirect', redirectLink);
           return instance;
         }
-        var tg = new CMS.Models.TaskGroup({
-          title: task_group_title,
+        // The code below executes only when you create a new workflow
+        // and it's first task group
+        tg = new CMS.Models.TaskGroup({
+          title: taskGroupTitle,
           workflow: instance,
           contact: instance.people && instance.people[0] || instance.modified_by,
-          context: instance.context,
+          context: instance.context
         });
-        return tg.save().then(function(tg) {
+        return tg.save().then(function (tg) {
           // Prevent the redirect form workflow_page.js
           tg.attr('_no_redirect', true);
-          instance.attr('_redirect', redirect_link + "/task_group/" + tg.id);
+          instance.attr('_redirect', redirectLink + '/task_group/' + tg.id);
           return that;
         });
       });

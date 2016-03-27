@@ -138,7 +138,7 @@ class Workflow(CustomAttributable, HasOwnContext, Timeboxed, Described, Titled,
 
   _aliases = {
       "frequency": {
-          "display_name": "Frequency",
+          "display_name": "Repeats",
           "mandatory": True,
       },
       "notify_custom_message": "Custom email message",
