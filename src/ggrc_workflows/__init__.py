@@ -348,6 +348,11 @@ def update_cycle_task_parent_state(obj):  # noqa
     if not parent:
       continue
 
+    if parent.__class__.__name__ == "CycleTaskGroupObjectTask" and \
+       parent.group_type == "Backlog":
+      continue
+    #import ipdb; ipdb.set_trace()
+
     # If any child is `InProgress`, then parent should be `InProgress`
     if obj.status == 'InProgress' or obj.status == 'Declined':
       if parent.status != 'InProgress':
@@ -955,16 +960,20 @@ class WorkflowRoleContributions(RoleContributions):
           'create': ['Workflow'],
       },
       'Creator': {
-          'read': [],
-          'create': ['Workflow'],
+          'create': ['Workflow', 'CycleTaskGroupObjectTask']
       },
       'Editor': {
-          'read': ['Workflow'],
-          'create': ['Workflow'],
+          # TODO: not sure if it needs CycleTaskGroupObjectTask...
+          'read': ['Workflow', 'CycleTaskGroupObjectTask'],
+          'create': ['Workflow', 'CycleTaskGroupObjectTask'],
+          'edit': ['CycleTaskGroupObjectTask'],
+          'delete': ['CycleTaskGroupObjectTask']
       },
       'Reader': {
-          'read': ['Workflow'],
-          'create': ['Workflow'],
+          'read': ['Workflow', 'CycleTaskGroupObjectTask'],
+          'create': ['Workflow', 'CycleTaskGroupObjectTask'],
+          # 'edit': ['CycleTaskGroupObjectTask'],
+          # 'delete': ['CycleTaskGroupObjectTask']
       },
       'ProgramEditor': {
           'read': ['Workflow'],

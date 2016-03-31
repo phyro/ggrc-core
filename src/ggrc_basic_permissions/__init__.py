@@ -36,6 +36,7 @@ from sqlalchemy import literal
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm.attributes import get_history
+from sqlalchemy.sql.expression import literal
 
 
 blueprint = Blueprint(
@@ -495,7 +496,32 @@ def load_permissions_for(user):  # noqa
       # the query has executed.
       cache.set(key, permissions, PERMISSION_CACHE_TIMEOUT)
 
+  # add backlog workflow owner permissions to everyone
+  # TODO: MAKE IT DYNAMIC LIKE 'objects_via_assignable_query'
+  # TODO: CHANGE IN MYSQL.PY search 'objects_via_assignable_query'
+  #import ipdb; ipdb.set_trace()
+  actions = ["read", "edit", "update"]
+  _types = ["Workflow", "Cycle", "CycleTaskGroup", "CycleTaskGroupObjectTask", "TaskGroup"]
+  #import ipdb; ipdb.set_trace()
+  for _, _, wf_context_id in public_workflows().all():
+    for _type in _types:
+      if _type == "CycleTaskGroupObjectTask":
+        actions += ["delete"]
+      for action in actions:
+        permissions.setdefault(action, {})\
+            .setdefault(_type, {})\
+            .setdefault('contexts', list())\
+            .append(wf_context_id)
+  #import ipdb; ipdb.set_trace()
   return permissions
+
+def public_workflows():
+  """| id | type | role_name or context |"""
+  _workflow = aliased(all_models.Workflow, name="wf")
+  #import ipdb; ipdb.set_trace()
+  return db.session.query(_workflow.id, literal("Workflow").label("type"), _workflow.context_id).filter(_workflow.kinder == "Backlog")
+  #.all()
+  #return db.session.query(_workflow.id, "Workflow", _workflow.context_id).filter(_workflow.is_long_running == 1)
 
 
 def _get_or_create_personal_context(user):

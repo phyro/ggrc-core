@@ -14,16 +14,4 @@ dev:
    - PYTHONDONTWRITEBYTECODE=true
    - NODE_PATH=/vagrant-dev/node_modules/
 
-selenium:
-  build: .
-  dockerfile: Dockerfile-selenium
-  ports:
-   - "4444:4444"
-  volumes:
-   - "./test/selenium:/selenium"
-   - "/dev/shm:/dev/shm"
-  links:
-   - dev 
-  environment:
-   - PYTHONDONTWRITEBYTECODE=true
-   - PYTHONPATH=/selenium/src
+

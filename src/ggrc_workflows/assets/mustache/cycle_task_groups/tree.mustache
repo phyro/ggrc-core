@@ -32,6 +32,8 @@
                 <li>
                   {{#with_review_task}}
                     {{#using cycle=instance.cycle}}
+                      {{#using workflow=cycle.workflow}}
+                      {{^if_equals workflow.kinder "Backlog"}}
                       {{#if_equals cycle.is_current true}}
                       {{#is_allowed 'update' instance}}
                         <div class="request-control"
@@ -67,6 +69,8 @@
                         </div>
                       {{/is_allowed 'update' instance}}
                       {{/if_equals}}
+                      {{/if_equals}}
+                      {{/using}}
                     {{/using}}
                   {{/with_review_task}}
                 </li>

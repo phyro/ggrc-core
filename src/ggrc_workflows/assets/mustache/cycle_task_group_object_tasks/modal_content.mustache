@@ -39,11 +39,7 @@
         <span class="required">*</span>
         <i class="fa fa-question-circle" rel="tooltip" title="This is the default assignee for this task."></i>
       </label>
-      {{#if_cycle_assignee_privileges instance}}
       <input tabindex="3" class="input-block-level" name="contact.email" data-lookup="Person" placeholder="Enter email address" type="text" value="{{firstexist contact.email current_user.email ''}}" />
-      {{else}}
-        <div>{{firstexist contact.email  ''}}</div> <!-- TODO: maybe add something here as well, if the user doesn't have permissions -->
-      {{/if_cycle_assignee_privileges}}
       {{/using}}
       <br>
     </div>

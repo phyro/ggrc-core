@@ -113,6 +113,10 @@ class Workflow(CustomAttributable, HasOwnContext, Timeboxed, Described, Titled,
   is_old_workflow = deferred(
       db.Column(db.Boolean, default=False, nullable=True), 'Workflow')
 
+  kinder = db.Column(db.String, default=None, nullable=True)
+  is_long_running = db.Column(db.Integer, default=None, nullable=True)
+
+
   @computed_property
   def workflow_state(self):
     return WorkflowState.get_workflow_state(self.cycles)
@@ -134,6 +138,8 @@ class Workflow(CustomAttributable, HasOwnContext, Timeboxed, Described, Titled,
       reflection.PublishOnly('next_cycle_start_date'),
       reflection.PublishOnly('non_adjusted_next_cycle_start_date'),
       reflection.PublishOnly('workflow_state'),
+      'kinder',
+      'is_long_running'
   ]
 
   _aliases = {

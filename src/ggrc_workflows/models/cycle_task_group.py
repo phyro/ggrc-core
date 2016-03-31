@@ -51,7 +51,7 @@ class CycleTaskGroup(WithContact, Stateful, Slugged, Timeboxed, Described,
       'task_group',
       'cycle_task_group_tasks',
       'sort_index',
-      'next_due_date',
+      'next_due_date'
   ]
 
   _aliases = {
@@ -90,5 +90,5 @@ class CycleTaskGroup(WithContact, Stateful, Slugged, Timeboxed, Described,
     """
     query = super(CycleTaskGroup, cls).eager_query()
     return query.options(
-        orm.joinedload('cycle_task_group_tasks'),
+        orm.joinedload('cycle_task_group_tasks')
     )
