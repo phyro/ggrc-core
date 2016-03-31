@@ -392,7 +392,7 @@ can.Model("can.Model.Cacheable", {
       can.each(can.unique(can.map(_pjs, function(pj) { return pj.through; })), function(binding) {
         refresh_dfds.push(obj.get_binding(binding).refresh_stubs());
       });
-
+      debugger;
       return $.when.apply($, refresh_dfds)
       .then(function() {
         can.each(obj._pending_joins, function(pj) {
@@ -1099,7 +1099,7 @@ can.Model("can.Model.Cacheable", {
   mark_for_addition: function (join_attr, obj, extra_attrs, options) {
     obj = obj.reify ? obj.reify() : obj;
     extra_attrs = _.isEmpty(extra_attrs) ? undefined : extra_attrs;
-
+    debugger;
     this.is_pending_join(obj);
     this._pending_joins.push({how: "add", what: obj, through: join_attr, extra: extra_attrs, opts: options});
   },

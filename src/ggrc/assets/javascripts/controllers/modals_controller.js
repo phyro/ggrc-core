@@ -354,6 +354,7 @@ can.Control("GGRC.Controllers.Modals", {
     value = el.val();
     cb = el.data('lookup-cb');
 
+    //debugger;
     // If no model is specified, short circuit setting values
     // Used to support ad-hoc form elements in confirmation dialogs
     if (!this.options.model) {
@@ -838,6 +839,7 @@ can.Control("GGRC.Controllers.Modals", {
       }
 
       this.disable_hide = true;
+      //debugger;
       ajd = instance.save();
       ajd.fail(this.save_error.bind(this))
         .done(function (obj) {
@@ -992,6 +994,7 @@ can.Component.extend({
     instance_attr: "@",
     source_mapping: "@",
     source_mapping_source: "@",
+    default_mappings: [], // expects array of objects
     mapping: "@",
     deferred: "@",
     attributes: {},
@@ -1003,13 +1006,25 @@ can.Component.extend({
     init: function() {
       var that = this,
           key;
-
+      // uporabi kar nek nov property default mappings, ki potem prepopulata fieldsse, poglje ce je to ze kje narejeno, da se iz cache poberejo objekti ven
       this.scope.attr("controller", this);
       if (!this.scope.instance) {
         this.scope.attr("deferred", true);
       } else if (this.scope.instance.reify) {
         this.scope.attr("instance", this.scope.instance.reify());
       }
+
+      debugger;
+      this.scope.default_mappings.forEach(function (default_mapping) {
+        // check if we can actually map this object to cycle task, make verification checks
+        // lahko dobis seznam objectov k se lahko mappajo, k se pokaze pri multimodal, dropdown pri mappingih
+        if (default_mapping.id && default_mapping.type) {
+          var model = CMS.Models[default_mapping.type];
+          var object_to_add = model.findInCacheById(default_mapping.id);
+          that.scope.instance.mark_for_addition("related_objects_as_source", object_to_add, {});
+          that.scope.list.push(object_to_add);
+        }
+      });
 
       if (!this.scope.source_mapping) {
         this.scope.attr("source_mapping", this.scope.mapping);
@@ -1022,14 +1037,15 @@ can.Component.extend({
         .get_binding(this.scope.source_mapping)
         .refresh_instances()
         .then(function (list) {
-          this.scope.attr("list", can.map(list, function (binding) {
+          var current_list = this.scope.attr("list");
+          this.scope.attr("list", current_list.concat(can.map(list, function (binding) { // TUKI DELAMO CONCAT-----------------------------------------A je to kul?
             return binding.instance;
-          }));
+          })));
         }.bind(this));
         //this.scope.instance.attr("_transient." + this.scope.mapping, this.scope.list);
       } else {
         key = this.scope.instance_attr + "_" + (this.scope.mapping || this.scope.source_mapping);
-        if (!this.scope.parent_instance._transient[key]) {
+        if (!this.scope.parent_instance._transient[key]) { // mogoce lahko dodam v transient
           this.scope.attr("list", []);
           this.scope.parent_instance.attr(
             "_transient." + key,
@@ -1063,6 +1079,7 @@ can.Component.extend({
         return;
       }
       this.scope.attr("instance", this.scope.attr("parent_instance").attr(this.scope.instance_attr).reify());
+      debugger;
       can.each(
         changes,
         function(item) {

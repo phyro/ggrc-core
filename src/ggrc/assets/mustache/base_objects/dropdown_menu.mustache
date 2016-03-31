@@ -52,6 +52,24 @@
     {{/if_equals}}
 
     <li>
+      {{#is_allowed 'create' 'CycleTaskGroupObjectTask' context=null}}
+        {{"TODO: some ifs we left out"}}
+          <a
+            rel="tooltip"
+            data-placement="left"
+            data-original-title="Create Cycle Task for object"
+            data-object-plural="cycle_task_group_object_tasks"
+            data-modal-class="modal-wide" href="javascript://"
+            data-object-singular="CycleTaskGroupObjectTask"
+            data-toggle="modal-ajax-form"
+            data-modal-reset="reset"
+            data-object-params='{"pre_mapped_objects": [{"type": "{{ instance.type }}", "id": {{ instance.id }} }], "modal_title": "Create New Cycle Task"}'>
+            <i class="fa fa-calendar-check-o"></i> Create a task
+          </a>
+      {{/is_allowed}}
+    </li>
+
+    <li>
       <clipboard-link title="Get permalink" notify="true" text="{{get_permalink_for_object instance}}" />
     </li>
 

@@ -40,12 +40,76 @@
         <i class="fa fa-question-circle" rel="tooltip" title="This is the default assignee for this task."></i>
       </label>
       {{#if_cycle_assignee_privileges instance}}
-      <input tabindex="3" class="input-block-level" name="contact.email" data-lookup="Person" placeholder="Enter email address" type="text" value="{{firstexist contact.email ''}}" />
+      <input tabindex="3" class="input-block-level" name="contact.email" data-lookup="Person" placeholder="Enter email address" type="text" value="{{firstexist contact.email current_user.email ''}}" />
       {{else}}
-        <div>{{firstexist contact.email ''}}</div>
+        <div>{{firstexist contact.email  ''}}</div> <!-- TODO: maybe add something here as well, if the user doesn't have permissions -->
       {{/if_cycle_assignee_privileges}}
       {{/using}}
       <br>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3">
+      <ggrc-modal-connector
+          parent_instance="instance"
+          instance="instance"
+          source_mapping="info_related_objects"
+          default_mappings="object_params.pre_mapped_objects"
+          deferred="true"
+          >
+        <label class="border-l">
+          Mapped Objects
+          <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
+        </label>
+        {{#prune_context}}
+          {{#each list}}
+          <div class="oneline">
+            <a href="javascript://" class="unmap" data-toggle="unmap">
+              <span class="result" {{data 'result'}}></span>
+              <i class="fa fa-trash"></i>
+            </a>
+            {{#update_link .}}
+              <a class="url" href="{{schemed_url link}}" target="_blank">
+                {{firstexist title name email link}}
+              </a>
+            {{/update_link}}
+          </div>
+          {{/each}}
+        {{/prune_context}}
+        {{^list.length}}
+          <span class="gray"><em>No mapped objects</em></span>
+        {{/list.length}}
+        <div class="objective-selector">
+          <div style="clear:both">
+            <br>
+            <a class="section-add section-sticky btn btn-small btn-draft"
+              href="javascript://" rel="tooltip"
+              {{data "deferred_to"}}
+              data-placement="left"
+              data-toggle="unified-mapper"
+              data-deferred="true"
+              data-object-source="true"
+              data-join-mapping="info_related_objects"
+              data-join-object-id="{{instance.id}}"
+              data-join-object-type="{{instance.class.model_singular}}"
+              data-original-title="Map Object to this {{instance.class.title_singular}}" tabindex="6">
+              Map Objects
+            </a>
+          </div>
+        </div>
+      </ggrc-modal-connector>
+    </div>
+    <div class="span3">
+      {{#using contact=instance.contact model_singular=model.model_singular}}
+      <label>
+        Workflow
+        <span class="required">*</span>
+        <i class="fa fa-question-circle" rel="tooltip" title="Select the workflow that this task will be assigned to."></i>
+      </label>
+      <input class="input-block-level" name="workflow" model="Workflow" data-lookup="Workflow" data-lookup-cb="testtt" placeholder="wooooooo" type="text" />
+        <div>{{firstexist instance.a_new_workflowwww.title  ''}}</div> <!-- TODO: this will be for when workflow is already selected and non-editable -->
+        aaaa {{instance.cycle}}
+      {{/using}}
     </div>
   </div>
   <div class="row-fluid">
@@ -102,9 +166,10 @@
       </div>
     </div>
     <input type="hidden" name="task_group" model="TaskGroup" value="{{firstnonempty object_params.task_group instance.task_group.id}}" />
+    <!--<input type="hidden" name="cycle_task_group_id" value="{{firstnonempty object_params.task_group instance.task_group.id}}" />-->
+    <input type="hidden" name="cycle_task_group" model="CycleTaskGroup" value="{{firstnonempty object_params.task_group instance.task_group.id}}" />
     <input type="hidden" name="context" model="Context" value="{{firstnonempty object_params.context instance.context.id}}" />
     <input type="hidden" name="sort_index" value="{{firstnonempty object_params.sort_index instance.sort_index}}" />
     <input type="hidden" name="cycle" model="Cycle" value="{{instance.cycle.id}}" />
   </div>
-  {{{render_hooks 'CycleTaskGroupObjectTask.modal_tier1'}}}
 </form>

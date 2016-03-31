@@ -99,7 +99,7 @@
               });
             });
           }
-
+          // TODO: maybe refactor this so it searches on the model, not the search api
           return GGRC.Models.Search
             .search_for_types(
               request.term || '',

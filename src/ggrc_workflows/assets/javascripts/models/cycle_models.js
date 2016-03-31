@@ -247,13 +247,13 @@
     update: "PUT /api/cycle_task_group_object_tasks/{id}",
     destroy: "DELETE /api/cycle_task_group_object_tasks/{id}",
     title_singular: "Cycle Task",
-
     attributes: {
       cycle_task_group: "CMS.Models.CycleTaskGroup.stub",
       task_group_task: "CMS.Models.TaskGroupTask.stub",
       cycle_task_entries: "CMS.Models.CycleTaskEntry.stubs",
       modified_by: "CMS.Models.Person.stub",
       contact: "CMS.Models.Person.stub",
+      workflow: "CMS.Models.Workflow.stub",
       context: "CMS.Models.Context.stub",
       cycle: "CMS.Models.Cycle.stub"
     },
@@ -296,7 +296,6 @@
         }
       ]
     },
-
     init: function() {
       var that = this;
       this._super.apply(this, arguments);
@@ -324,6 +323,35 @@
       return this.refresh_all('cycle', 'workflow').then(function (workflow) {
         return workflow;
       });
+    },
+    testtt: function (object) {
+      console.log("objectaaaaaaaaaaaaaaaaaa");
+      console.log(object);
+      this["workflow"] = object;
+      if (object.cycles && object.cycles.length){
+        this.cycle_id = object.cycles[0].id;
+        jQuery("input[name='cycle']").val(object.cycles[0].id);
+      //debugger;
+      //this.set_value({ name: "dddddddd", value: "6666666r" })
+/*        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        console.log(object.cycles[0]);
+*/
+      var cycle = CMS.Models.Cycle.findOne({id:object.cycles[0].id});
+      cycle.then(
+        function (cycle_got) {
+          cycle_got.reify();
+          if (cycle_got.cycle_task_groups && cycle_got.cycle_task_groups.length) {
+            //jQuery("input[name='cycle_task_group_id']").val(object.task_groups[0].id);
+            //jQuery("input[name='cycle_task_group']").show();
+            jQuery("input[name='cycle_task_group']").val(cycle_got.cycle_task_groups[0].id);
+          }
+        }
+        );
+      //if (object.task_groups && object.task_groups.length) {
+
+      }
+        //this.task_group = object.task_groups[0].id;
+      console.log(this);
     },
     object: function () {
       return this.refresh_all('task_group_object', 'object').then(function (object) {
