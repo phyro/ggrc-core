@@ -383,9 +383,8 @@
 
         var new_widget_descriptors = {};
         var new_default_widgets = [
-          'info', 'person', 'task_group', 'current', 'history'
+          'info', 'person', 'task_group', 'current'
         ];
-        var history_widget_descriptor;
         var current_widget_descriptor;
         var object = GGRC.page_instance();
 
@@ -467,22 +466,8 @@
               }
             }
           }
-    );
+        );
 
-        history_widget_descriptor = {
-          content_controller: CMS.Controllers.TreeView,
-          content_controller_selector: 'ul',
-          widget_initial_content: '<ul class="tree-structure new-tree"></ul>',
-          widget_id: 'history',
-          widget_name: 'History',
-          widget_icon: 'history',
-          content_controller_options: {
-            draw_children: true,
-            parent_instance: object,
-            model: 'Cycle',
-            mapping: 'previous_cycles'
-          }
-        };
         current_widget_descriptor = {
           content_controller: CMS.Controllers.TreeView,
           content_controller_selector: 'ul',
@@ -498,7 +483,6 @@
             header_view: GGRC.mustache_path + '/cycles/tree_header.mustache'
           }
         };
-        new_widget_descriptors.history = history_widget_descriptor;
         new_widget_descriptors.current = current_widget_descriptor;
 
         new GGRC.WidgetList('ggrc_workflows', {Workflow: new_widget_descriptors});
