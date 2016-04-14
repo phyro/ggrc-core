@@ -1,0 +1,30 @@
+<div class="row-fluid">
+      <div data-id="state_hidden" class="span4 hidable">
+  {{#with_page_object_as 'parent_instance'}}
+  {{#using workflow=parent_instance}}
+  {{#using cycles=workflow.cycles}}
+  {{#sortBy cycles 'created_at' 'desc'}}
+  
+    <dropdown-cycles-mapping
+      instances='cycles'
+      
+      options_template='{"draw_children": true,
+          "mapping": "cycle_task_group_object_tasks",
+          "header_view": "/cycle_task_group_object_tasks/tree_header.mustache",
+          "add_item_view": "/cycle_task_group_object_tasks/tree_add_item.mustache"}'
+      options_model='CycleTaskGroupObjectTask'
+      treeview_element='.tree-structure'>
+
+      
+
+    </dropdown-cycles-mapping>
+  {{/sortBy}}
+  {{/using}}
+  {{/using}}
+  {{/with_page_object_as 'page_instance'}}
+  </div>
+  <div id='end_cycle' data-id="state_hidden" class="span8">
+  </div>
+</div>
+
+<div id="sprints"><ul class="tree-structure new-tree"></ul></div>
