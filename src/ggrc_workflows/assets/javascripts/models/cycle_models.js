@@ -152,6 +152,13 @@
       });
     },
     overdue: overdue_compute,
+    dropdown_name: function () {
+      if (this.is_current) {
+        return "ENDS ON: " + this.end_date;
+      } else {
+        return "ENDED ON:" + this.end_date;
+      }
+    }
   });
 
   _mustache_path = GGRC.mustache_path + "/cycle_task_entries";

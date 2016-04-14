@@ -3465,4 +3465,19 @@ Mustache.registerHelper("un_camel_case", function (str, options) {
 
     return options.fn(newContext);
   });
+
+
+  Mustache.registerHelper('sortBy', function (instances, attr, orderBy, options) {
+    if (instances.isComputed) {
+      instances = instances();
+    }
+    var sorted_cycles = _.sortBy(instances, function (inst) {
+      return orderBy === 'desc' ? -inst[attr] : inst[attr];
+    });
+
+    var frame = {};
+    frame.cycles = sorted_cycles;
+    return options.fn(options.contexts.add(frame));
+  });
+
 })(this, jQuery, can);
