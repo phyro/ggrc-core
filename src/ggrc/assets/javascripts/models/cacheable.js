@@ -402,7 +402,10 @@ can.Model("can.Model.Cacheable", {
           if(pj.how === "add") {
             //Don't re-add -- if the object is already mapped (could be direct or through a proxy)
             // move on to the next one
-            if(~can.inArray(pj.what, can.map(binding.list, function(bo) { return bo.instance; }))
+            // Note: if it is marked as 'change' then you must add it regardless if it exists because it will
+            // be deleted.
+            var changed = pj.opts && pj.opts.change;
+            if(!changed && ~can.inArray(pj.what, can.map(binding.list, function(bo) { return bo.instance; }))
                || (binding.loader.option_attr
                   && ~can.inArray(
                     pj.what
@@ -435,10 +438,13 @@ can.Model("can.Model.Cacheable", {
               })
             );
           } else if(pj.how === "remove") {
+
             can.map(binding.list, function(bound_obj) {
               if(bound_obj.instance === pj.what || bound_obj.instance[binding.loader.option_attr] === pj.what) {
                 can.each(bound_obj.get_mappings(), function(mapping) {
-                  dfds.push(mapping.refresh().then(function() { mapping.destroy(); }));
+                  dfds.push(mapping.refresh().then(function() {
+                    mapping.destroy();
+                  }));
                 });
               }
             });
