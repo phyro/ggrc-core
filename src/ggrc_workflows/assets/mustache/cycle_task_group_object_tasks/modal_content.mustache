@@ -15,9 +15,9 @@
   <div class="row-fluid">
     <div class="span8">
       {{#if_helpers '\
-      #if_equals' instance.task_type 'text' '\
-      or #if_equals' instance.task_type '' '\
-      or #if_null' instance.task_type}}
+        #if_equals' instance.task_type 'text' '\
+        or #if_equals' instance.task_type '' '\
+        or #if_null' instance.task_type}}
         <h6>Task Description</h6>
         <div class="wysiwyg-area bottom-no-margin">
           <textarea id="tgt_response_options" class="span12 triple wysihtml5" name="description" placeholder="Enter Description" tabindex="2">{{instance.description}}</textarea>
@@ -27,7 +27,7 @@
           Selection Response Options (Comma Separated)
         </label>
           <textarea id="tgt_response_options" class="span12 double" name="response_options_csv" placeholder="Enter Description" tabindex="2">{{instance.response_options_csv}}</textarea>
-      {{/if_equals}}
+      {{/if_helpers}}
       <br>
       <select name="task_type">
         <option value="text" {{#if_equals instance.task_type 'text'}}selected="selected"{{/if_equals}}>Rich text</option>

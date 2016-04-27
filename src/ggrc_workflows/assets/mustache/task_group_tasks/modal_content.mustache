@@ -41,11 +41,10 @@
         <option value="checkbox" {{#if_equals instance.task_type 'checkbox'}}selected="selected"{{/if_equals}}>Checkbox</option>
       </select>
       <br>
-      <label>
       {{#if_helpers '\
-      #if_equals' instance.task_type 'text' '\
-      of #if_equals' instance.task_type '' '\
-      or #if_null' instance.task_type}}
+        #if_equals' instance.task_type 'text' '\
+        or #if_equals' instance.task_type '' '\
+        or #if_null' instance.task_type}}
       <label>
         Task Description
         <i class="fa fa-question-circle" rel="tooltip" title="Provide more details on the purpose of this {{model.model_singular}} and provide context for how and when this {{model.model_singular}} might be used."></i>
@@ -53,7 +52,7 @@
       <div class="wysiwyg-area">
         <textarea id="tgt_response_options" class="span12 double wysihtml5" name="description" placeholder="Enter Description" tabindex="3">{{instance.description}}</textarea>
       </div>
-      {{/if_equals}}
+      {{/if_helpers}}
       {{#if_equals instance.task_type 'menu'}}
       <label>
         Dropdown Options (Comma Separated)
