@@ -4,9 +4,17 @@
 import unittest
 from datetime import date
 from datetime import datetime
+from sqlalchemy.orm import attributes
 
 
+from ggrc import db
+from ggrc.models import computed_property
+from ggrc.models import mixins
+from ggrc.models import relationship
 from ggrc_workflows.models import task_group_task
+from ggrc_workflows.models import mixins as wf_mixins
+
+from unit.ggrc.models import test_mixins_base
 
 
 class TestTaskGroupTask(unittest.TestCase):
@@ -48,3 +56,43 @@ class TestTaskGroupTask(unittest.TestCase):
 
     t.start_date = date(2015, 6, 17)
     self.assertEqual(date(2015, 6, 17), t.start_date)
+
+
+class TestTaskGroupTaskMixins(test_mixins_base.TestMixinsBase):
+  """ Test that TaskGroupTask has the expected mixins and corresponding
+  attributes """
+
+  def setUp(self):
+    self.model = task_group_task.TaskGroupTask
+    self.included_mixins = [
+        db.Model,
+        mixins.Base,
+        mixins.Described,
+        mixins.Slugged,
+        mixins.Titled,
+        mixins.WithContact,
+        relationship.Relatable,
+        wf_mixins.RelativeTimeboxed,
+    ]
+
+    self.attributes_introduced = [
+        ('task_group_id', attributes.InstrumentedAttribute),
+        ('sort_index', attributes.InstrumentedAttribute),
+        ('object_approval', attributes.InstrumentedAttribute),
+        ('task_type', attributes.InstrumentedAttribute),
+        ('response_options', attributes.InstrumentedAttribute),
+        ('display_name', computed_property.computed_property),          # Base          # noqa
+        ('description', attributes.InstrumentedAttribute),              # Described     # noqa
+        ('slug', attributes.InstrumentedAttribute),                     # Slugged       # noqa
+        ('title', attributes.InstrumentedAttribute),                    # Titled        # noqa
+        ('contact_id', attributes.InstrumentedAttribute),               # WithContact   # noqa
+        ('secondary_contact_id', attributes.InstrumentedAttribute),     # WithContact   # noqa
+        ('contact', attributes.InstrumentedAttribute),                  # WithContact   # noqa
+        ('secondary_contact', attributes.InstrumentedAttribute),        # WithContact   # noqa
+        ('related_sources', attributes.InstrumentedAttribute),          # Relatable     # noqa
+        ('related_destinations', attributes.InstrumentedAttribute),     # Relatable     # noqa
+        ('relative_start_month', attributes.InstrumentedAttribute),     # RelativeTimeboxed   # noqa
+        ('relative_start_day', attributes.InstrumentedAttribute),       # RelativeTimeboxed   # noqa
+        ('relative_end_month', attributes.InstrumentedAttribute),       # RelativeTimeboxed   # noqa
+        ('relative_end_day', attributes.InstrumentedAttribute),         # RelativeTimeboxed   # noqa
+    ]
