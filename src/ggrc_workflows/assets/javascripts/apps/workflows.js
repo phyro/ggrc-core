@@ -265,8 +265,8 @@
         workflows: Proxy(
           'Workflow', 'workflow', 'WorkflowPerson', 'person', 'workflow_people'
         )
-
       },
+
       Person: {
         assigned_tasks: Search(function (binding) {
           return CMS.Models.CycleTaskGroupObjectTask.findAll({
@@ -280,6 +280,58 @@
             contact_id: binding.instance.id
           });
         }, 'Cycle')
+      },
+
+      TaskGroupTask: {
+        _canonical: {
+          related_objects_as_source: [
+            'AccessGroup', 'Assessment', 'Audit', 'Clause', 'Contract',
+            'Control', 'DataAsset', 'Document', 'Facility', 'Issue', 'Market',
+            'Objective', 'OrgGroup', 'Policy', 'Process', 'Product', 'Program',
+            'Project', 'Regulation', 'Request', 'Risk', 'Section', 'Standard',
+            'System', 'Threat', 'Vendor'
+          ]
+        },
+        related_objects_as_source: Proxy(
+          null, 'destination', 'Relationship', 'source', 'related_destinations'),
+        related_objects_as_destination: Proxy(
+          null, 'source', 'Relationship', 'destination', 'related_sources'),
+        related_objects: Multi(['related_objects_as_source', 'related_objects_as_destination']),
+        destinations: Direct('Relationship', 'source', 'related_destinations'),
+        sources: Direct('Relationship', 'destination', 'related_sources'),
+        relationships: Multi(['sources', 'destinations']),
+        related_access_groups: TypeFilter('related_objects', 'AccessGroup'),
+        related_data_assets: TypeFilter('related_objects', 'DataAsset'),
+        related_facilities: TypeFilter('related_objects', 'Facility'),
+        related_markets: TypeFilter('related_objects', 'Market'),
+        related_org_groups: TypeFilter('related_objects', 'OrgGroup'),
+        related_vendors: TypeFilter('related_objects', 'Vendor'),
+        related_processes: TypeFilter('related_objects', 'Process'),
+        related_products: TypeFilter('related_objects', 'Product'),
+        related_projects: TypeFilter('related_objects', 'Project'),
+        related_systems: TypeFilter('related_objects', 'System'),
+        related_issues: TypeFilter('related_objects', 'Issue'),
+        related_audits: TypeFilter('related_objects', 'Audit'),
+        related_controls: TypeFilter('related_objects', 'Control'),
+        related_documents: TypeFilter('related_objects', 'Document'),
+        related_assessments: TypeFilter('related_objects', 'Assessment'),
+        related_requests: TypeFilter('related_objects', 'Request'),
+        regulations: TypeFilter('related_objects', 'Regulation'),
+        contracts: TypeFilter('related_objects', 'Contract'),
+        policies: TypeFilter('related_objects', 'Policy'),
+        standards: TypeFilter('related_objects', 'Standard'),
+        programs: TypeFilter('related_objects', 'Program'),
+        controls: TypeFilter('related_objects', 'Control'),
+        sections: TypeFilter('related_objects', 'Section'),
+        clauses: TypeFilter('related_objects', 'Clause'),
+        objectives: TypeFilter('related_objects', 'Objective'),
+        task_group: Direct(
+          'TaskGroup',
+          'task_group_tasks',
+          'task_group'),
+        info_related_objects: CustomFilter('related_objects', function (related_objects) {
+          return !_.includes(['Comment', 'Document', 'Person'], related_objects.instance.type);
+        })
       }
     };
 
