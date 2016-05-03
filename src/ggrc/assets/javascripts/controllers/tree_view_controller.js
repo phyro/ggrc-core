@@ -1396,6 +1396,11 @@ CMS.Controllers.TreeLoader('CMS.Controllers.TreeView', {
     order_factor = order === 'asc' ? 1 : -1;
 
     comparator = function (a, b) {
+      // If a or b is a string then convert falsy values to empty strings
+      if (_.isString(a) || _.isString(b)) {
+        a = a || '';
+        b = b || '';
+      }
       return String.naturalCaseCompare(a, b) * order_factor;
     };
     this.options.sort_function = function (val1, val2) {

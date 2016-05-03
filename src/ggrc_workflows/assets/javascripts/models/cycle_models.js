@@ -318,7 +318,8 @@
         {attr_title: 'Assignee', attr_name: 'assignee', attr_sort_field: 'contact.name|email'},
         {attr_title: 'Start Date', attr_name: 'start_date'},
         {attr_title: 'End Date', attr_name: 'end_date'},
-        {attr_title: 'Last Updated', attr_name: 'updated_at'}
+        {attr_title: 'Last Updated', attr_name: 'updated_at'},
+        {attr_title: 'Task Group', attr_name: 'label'}
       ],
       display_attr_names: ['title', 'assignee', 'start_date'],
       mandatory_attr_name: ['title'],

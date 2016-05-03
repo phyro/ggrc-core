@@ -43,6 +43,8 @@ class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
       db.String(length=250), default=default_task_type, nullable=False)
   response_options = db.Column(
       JsonType(), nullable=False, default='[]')
+  # TODO: make sure sorting works on new 'template' tab treeview
+  label = db.Column(db.String, default=None, nullable=True)
 
   VALID_TASK_TYPES = ['text', 'menu', 'checkbox']
 
@@ -82,7 +84,8 @@ class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
       'relative_end_day',
       'object_approval',
       'task_type',
-      'response_options'
+      'response_options',
+      'label'
   ]
   _sanitize_html = []
   _aliases = {

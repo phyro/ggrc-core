@@ -66,6 +66,8 @@ class CycleTaskGroupObjectTask(
   object_approval = association_proxy('cycle', 'workflow.object_approval')
   object_approval.publish_raw = True
 
+  label = db.Column(db.String, default=None, nullable=True)
+
   @property
   def cycle_task_objects_for_cache(self):
     """Changing task state must invalidate `workflow_state` on objects
@@ -82,6 +84,7 @@ class CycleTaskGroupObjectTask(
       'task_type',
       'response_options',
       'selected_response_options',
+      'label',
       PublishOnly('object_approval'),
       PublishOnly('finished_date'),
       PublishOnly('verified_date')

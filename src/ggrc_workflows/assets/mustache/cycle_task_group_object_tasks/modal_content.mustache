@@ -64,6 +64,10 @@
           {{^instance.computed_errors.workflow}}{{#instance.computed_errors.cycle}}<label class="help-inline warning">No active cycles in this workflow</label>{{/instance.computed_errors.cycle}}{{/instance.computed_errors.workflow}}
         {{/using}}
       </div>
+      <div class="{{#instance.computed_errors.contact}} field-failure {{/instance.computed_errors.contact}}">
+          <h6>Task Group</h6>
+          <input class="input-block-level required" id="task-group" placeholder="Enter Task Group Name" name="label" type="text" value="{{instance.label}}" tabindex="1">
+      </div>
     </div>
   </div>
 

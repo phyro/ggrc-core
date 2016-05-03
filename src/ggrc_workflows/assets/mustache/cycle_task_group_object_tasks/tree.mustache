@@ -46,6 +46,9 @@
                                 <div>{{firstnonempty contact.name contact.email ''}}</div>
                               {{/using}}
                             {{/case}}
+                            {{#case 'label'}}
+                                <div>{{firstnonempty instance.label ''}}</div>
+                            {{/case}}
                             {{#default}}
                               {{#if_helpers '\
                                 #if_equals' attr_name 'url' '\
