@@ -26,7 +26,7 @@ Weekly
 Monthly
 Quarterly
 Annually",,,,,,,,,,,,
-Workflow,code*,title*,description ,manager,frequency,force real-time email updates,custom email message,member,No Access,,,,,,,,
+Workflow,code*,title*,description ,manager,repeats,force real-time email updates,custom email message,member,No Access,,,,,,,,
 ,wf-1,wf-1,test,user1@ggrc.com,One time,no,this is super custom ,user2@ggrc.com,user20@ggrc.com,,,,,,,,
 ,wf-2,wf-2,test,user1@ggrc.com,Weekly,yes,this is super custom ,user2@ggrc.com,user20@ggrc.com,,,,,,,,
 ,wf-3,wf-3,test,user1@ggrc.com,Monthly,no,this is super custom ,user2@ggrc.com,user20@ggrc.com,,,,,,,,
