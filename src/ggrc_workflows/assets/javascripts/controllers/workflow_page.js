@@ -343,7 +343,7 @@
           return;
         }
         this.options.parent_instance = this.selected_instance;
-        
+
         treeViewHtml = can.view(GGRC.mustache_path + '/workflows/tree_view.mustache',
           this.options);
 
@@ -355,6 +355,9 @@
       update_end_sprint_button: function () {
         //debugger;
         // update the 'End sprint' button
+        // TODO what if you added a boolean variable in scope that would tell
+        // if the current cycle is_current and then just do {{#selected_is_current}}
+        // or even simpler maybe just {{#selected_instance.is_current}} ? 
         var renderer = can.view.mustache('' +
         '<cycle-end-cycle cycle="instance">' +
           '{{#is_allowed "update" cycle.workflow.reify}}' +

@@ -2,12 +2,13 @@
       <div data-id="state_hidden" class="span4 hidable">
   {{#with_page_object_as 'parent_instance'}}
   {{#using workflow=parent_instance}}
-  {{#using cycles=workflow.cycles}}
+  {{!#using cycles=workflow.cycles}}
+  {{#with_reified workflow 'cycles'}}
   {{#sortBy cycles 'created_at' 'desc'}}
-  
+
     <dropdown-cycles-mapping
       instances='cycles'
-      
+
       options_template='{"draw_children": true,
           "mapping": "cycle_task_group_object_tasks",
           "header_view": "/cycle_task_group_object_tasks/tree_header.mustache",
@@ -15,11 +16,12 @@
       options_model='CycleTaskGroupObjectTask'
       treeview_element='.tree-structure'>
 
-      
+
 
     </dropdown-cycles-mapping>
   {{/sortBy}}
-  {{/using}}
+  {{/workflow_cycles}}
+  {{!/using}}
   {{/using}}
   {{/with_page_object_as 'page_instance'}}
   </div>

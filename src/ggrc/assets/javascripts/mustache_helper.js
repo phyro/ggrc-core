@@ -911,6 +911,45 @@ Mustache.registerHelper("using", function (options) {
   return defer_render('span', finish, refresh_queue.trigger());
 });
 
+/**
+ *  Helper that reifies an attribute and puts reified value in the context
+ *
+ *  @param {can.Model} instance - instance which has attribute that needs to be
+ *    reified
+ *  @param {String} attribute - string which represents attribute name
+ *  @return augmented context with reified attribute
+ */
+Mustache.registerHelper("with_reified", function (instance,
+                                                  attribute,
+                                                  options) {
+  var frame = new can.Observe();
+  var attributeValue;
+
+  // instance can be a value that is computed
+  if (_.isFunction(instance)) {
+    instance = instance();
+  }
+  // if instance or attribute is undefined log and don't augment context
+  if (_.isUndefined(instance) || _.isUndefined(instance[attribute])) {
+    console.log("Instance or attribute is undefined!");
+  } else {
+    attributeValue = instance[attribute];
+    // Check if you have a list of items or a single item
+    if (attributeValue.length) {
+      frame.attr(attribute, _.map(attributeValue, function (item) {
+        if (item.reify) {
+          return item.reify();
+        }
+        return item;
+      }));
+    } else {
+      frame.attr(attribute,
+        attributeValue.reify ? attributeValue.reify() : attributeValue);
+    }
+  }
+  return options.fn(options.contexts.add(frame));
+});
+
 Mustache.registerHelper("with_mapping", function (binding, options) {
   var context = arguments.length > 2 ? resolve_computed(options) : this
     , frame = new can.Observe()
