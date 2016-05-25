@@ -9,6 +9,7 @@ dashboard-js-files:
   - models/helpers.js
   - workflow_mustache_helpers.js
   - controllers/approval_workflow_controller.js
+  - controllers/sprints_controller.js
 
 dashboard-js-spec-files:
 
@@ -86,6 +87,6 @@ dashboard-js-template-files:
   - cycle_task_group_object_tasks/current_tg_tree_footer.mustache
   - workflows/clone_modal_content.mustache
   - task_groups/clone_modal_content.mustache
-  - workflows/dropdown_cycles.mustache
+  - workflows/dropdown_mapping.mustache
   - workflows/tree_view.mustache
   - workflows/sprints.mustache

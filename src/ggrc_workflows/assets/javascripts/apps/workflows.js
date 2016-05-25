@@ -97,14 +97,6 @@
         current_task_groups: Cross('current_cycle', 'cycle_task_groups'),
         current_tasks: Cross('current_task_groups', 'cycle_task_group_object_tasks'),
         current_all_tasks: Cross('current_task_groups', 'cycle_task_group_tasks'),
-        current_all_tasks_2: CustomFilter('current_all_tasks', function (result) {
-          //debugger;
-          return result.instance.cycle.id === 2;
-        }),
-        current_all_tasks_3: CustomFilter('current_all_tasks', function (result) {
-          return result.instance.cycle.id === 3;
-        }),
-        // TODO: to get mappings for Workflow: GGRC.Mappings.get_mappings_for('Workflow')
         people: Proxy(
           'Person', 'person', 'WorkflowPerson', 'workflow', 'workflow_people'),
         context: Direct(
@@ -286,7 +278,6 @@
         GGRC.mustache_path + '/base_objects/approval_link.mustache'
         );
     });
-    //debugger;
     new GGRC.Mappings('ggrc_workflows', mappings);
   };
 
@@ -496,9 +487,7 @@
           }
         };
         current_widget_descriptor = {
-          content_controller: CMS.Controllers.TreeView,
-          content_controller_selector: 'ul',
-          widget_initial_content: GGRC.mustache_path + '/workflows/sprints.mustache',//'<div id="sprints"><ul class="tree-structure new-tree"></ul></div>',
+          content_controller: CMS.Controllers.Sprints,
           widget_id: 'current',
           widget_name: 'Sprints',
           widget_icon: 'cycle',
@@ -506,15 +495,18 @@
             draw_children: true,
             parent_instance: object,
             model: CMS.Models.CycleTaskGroupObjectTask,
-            mapping: 'current_all_tasks',
-            //header_view: GGRC.mustache_path + '/cycle_task_group_object_tasks/tree_header.mustache',
+            mapping: 'cycle_task_group_object_tasks',
+            header_view: GGRC.mustache_path + '/cycle_task_group_object_tasks/tree_header.mustache',
             add_item_view: GGRC.mustache_path +
-              '/cycle_task_group_object_tasks/tree_add_item.mustache'
-            
+              '/cycle_task_group_object_tasks/tree_add_item.mustache',
+            // hide_filter is not really used by treeview but we want it in
+            // tree_header.mustache's context to specify if we should render
+            // the filter. For this to work we must set condition on this
+            // variable like done in cycletaskgroupobjecttask's tree_header
+            // TODO: try to hide the filter
+            hide_filter: true
           }
         };
-        // TODO: to get widget descriptor ' current' GGRC.WidgetList.get_current_page_widgets().current
-
         new_widget_descriptors.history = history_widget_descriptor;
         new_widget_descriptors.current = current_widget_descriptor;
 
