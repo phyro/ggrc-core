@@ -1,8 +1,0 @@
-<select id="dropdown-selector" data-id="state_dd" class="input-block-level" name="status" null-if-empty="null-if-empty" tabindex="6">
-  
-  {{#each cycles}}
-    <option {{#if_equals is_current status}}selected="true"{{/if_equals}} value="{{id}}">
-      {{dropdown_name}}
-    </option>
-  {{/each}}
-</select>

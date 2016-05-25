@@ -6,7 +6,14 @@
 }}
 
 {{#is_allowed 'create' 'CycleTaskGroupObjectTask' context=null}}
-  {{^if_recurring_workflow parent_instance}}
+  {{! Possible scenarios:
+    - on Sprints page with parent_instance Cycle
+    - on Dashboard MyTasks with parent_instance Person
+    - on some object page
+  }}
+  {{^if_helpers '\
+    #if_equals' parent_instance.type "Cycle" '\
+    and ^if' parent_instance.is_current}}
     <a
       class="section-add"
       href="javascript://"
@@ -19,19 +26,22 @@
       data-toggle="modal-ajax-form"
       data-modal-reset="reset"
       data-object-params='{
-        {{^if_instance_of parent_instance 'Person|Workflow'}}
+        {{#if_equals parent_instance.type 'Cycle'}}
+          {{#if parent_instance.is_current}}
+            "workflow":{"id":{{parent_instance.workflow.id}},"type":"Workflow"},
+          {{/if}}
+        {{/if_equals}}
+
+        {{^if_instance_of parent_instance 'Person|Cycle'}}
           "pre_mapped_objects": [{
             "type": "{{ parent_instance.type }}",
             "id": {{ parent_instance.id }}
           }],
         {{/if_instance_of}}
         "modal_title": "Create New Cycle Task"
-        {{#if_equals parent_instance.type 'Workflow'}}
-          ,"workflow":{"id":{{parent_instance.id}},"type":"Workflow"}
-        {{/if_equals}}
         }'>
 
       <i class="fa fa-plus-circle"></i>
     </a>
-  {{/if_recurring_workflow}}
+  {{/if_helpers}}
 {{/is_allowed}}

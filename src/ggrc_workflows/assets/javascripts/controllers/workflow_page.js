@@ -265,11 +265,11 @@
     tag: "cycle-end-cycle",
     template: "<content/>",
     events: {
-      click: function() {
-        this.scope.cycle.refresh().then(function(cycle) {
-          cycle.attr('is_current', false).save().then(function() {
+      click: function () {
+        this.scope.cycle.refresh().then(function (cycle) {
+          cycle.attr('is_current', false).save().then(function () {
             return GGRC.page_instance().refresh();
-          }).then(function(){
+          }).then(function () {
             // We need to update person's assigned_tasks mapping manually
             var person_id = GGRC.current_user.id,
                 person = CMS.Models.Person.cache[person_id];
@@ -284,149 +284,104 @@
     }
   });
 
-
-
-
-/*
+  /**
+   * This component listens for changes on selectedId so it can changes
+   * the selectedInstance which is needed by some of it's child elements
+   */
   can.Component.extend({
-    tag: "dropdown-cycles",
-    template: '<content/>',
+    tag: "sprints-observer",
+    template: "<content/>",
     scope: {
-      update_end_sprint_button: function () {
-        //debugger;
-        // update the 'End sprint' button
-        var renderer = can.view.mustache('' +
-        '<cycle-end-cycle cycle="instance">' +
-          '{{#is_allowed "update" cycle.workflow.reify}}' +
-          '{{#if cycle.is_current}}' +
-            '<button class="btn btn-draft btn-small end-cycle">End Cycle{{{cycle.id}}}</button>' +
-          '{{/if}}' +
-          '{{/is_allowed}}' +
-        '</cycle-end-cycle>');
-        var endSprintHtml = renderer({
-          instance: this.selected_cycle
-        });
-        $("#end_cycle").html(endSprintHtml);
-      },
-      // abc: [this.update, this.onChangeFunctions]
+      instances: undefined,
+      selectedId: null,
+      selectedInstance: null
+    },
+    init: function () {
+      var active = _.first(this.scope.instances);
+      if (active && active.id) {
+        this.scope.attr('selectedId', active.id);
+      }
     },
     events: {
-      init: function () {
-        //debugger;
-      },
-      '#dropdown-selector change': function (el, ev) {
-        //debugger;
-        this.scope.update_end_sprint_button();
+      '{scope} selectedId': function () {
+        this.scope.attr('selectedInstance',
+                        _.find(this.scope.instances, function (inst) {
+                          return inst.id === Number(this.scope.selectedId);
+                        }.bind(this)));
       }
     }
-  });*/
+  });
 
-
-
+  /**
+   *  Treeview component which renders a treeview with given options
+   *
+   *  @param {JSON} treeViewOptions - options for the treeview eg.
+   *   {
+   *     draw_children: true,
+   *     parent_instance: object,
+   *     model: CMS.Models.CycleTaskGroupObjectTask,
+   *     mapping: 'cycle_task_group_object_tasks',
+   *     header_view: GGRC.mustache_path + '/cycle_task_group_object_tasks/tree_header.mustache',
+   *     add_item_view: GGRC.mustache_path +
+   *       '/cycle_task_group_object_tasks/tree_add_item.mustache'
+   *   }
+   *    reified
+   *  @param {can.Model} instance - instance that will act as
+   *    parent_instance for the treeview (mapping will be applied on it)
+   */
 
   can.Component.extend({
-    tag: "dropdown-cycles-mapping",
-    template: can.view(GGRC.mustache_path +
-      '/workflows/dropdown_cycles.mustache'),
+    tag: "tree-view",
+    template: "<div><ul class='tree-structure new-tree'></ul></div>",
     scope: {
-      instances: [],
-      visible: false,
-      selected_instance: undefined,
-      treeview_element: '@',
-      options: '@',
-      options_template: '@',
-      options_parent_instance: undefined,
-      options_model: '@',
-      update_mappings: function () {
-        var treeViewHtml;
-        if (!this.selected_instance) {
-          return;
-        }
-        this.options.parent_instance = this.selected_instance;
-
-        treeViewHtml = can.view(GGRC.mustache_path + '/workflows/tree_view.mustache',
-          this.options);
-
-        // remove the tree view
-        $("#sprints > " + this.treeview_element).remove();
-        // append the new tree view
-        $("#sprints").append(treeViewHtml);
-      },
-      update_end_sprint_button: function () {
-        //debugger;
-        // update the 'End sprint' button
-        // TODO what if you added a boolean variable in scope that would tell
-        // if the current cycle is_current and then just do {{#selected_is_current}}
-        // or even simpler maybe just {{#selected_instance.is_current}} ? 
-        var renderer = can.view.mustache('' +
-        '<cycle-end-cycle cycle="instance">' +
-          '{{#is_allowed "update" cycle.workflow.reify}}' +
-          '{{#if cycle.is_current}}' +
-            '<button class="btn btn-draft btn-small end-cycle">End Cycle{{{cycle.id}}}</button>' +
-          '{{/if}}' +
-          '{{/is_allowed}}' +
-        '</cycle-end-cycle>');
-        var endSprintHtml = renderer({
-          instance: this.selected_instance
-        });
-        $("#end_cycle").html(endSprintHtml);
-      },
-      /*onChangeFunctions: function () {
-        return [this.update_mappings, this.update_end_sprint_button];
-      },*/
-      update: function () {
-        //debugger;
-        /*_.each(this.onChangeFunctions(), function (fn) {
-          fn.call(this);
-        }.bind(this));*/
-        this.update_mappings();
-        this.update_end_sprint_button();
-      }
-      // abc: [this.update, this.onChangeFunctions]
+      treeViewOptions: undefined,
+      instance: undefined
     },
     events: {
-      init: function () {
-        /*var curCycles = _.filter(this.scope.cycles, function (cycle) {
-          return cycle.is_current;
-        });
-        this.scope.current_cycles = curCycles;
-        if (curCycles.length) {
-          this.scope.selected_cycle = curCycles[0];
-        }*/
-        // sort instances by created at - the newest being the first
-        /*this.scope.cycles = _.sortBy(this.scope.cycles, function(inst) {
-          return -inst.created_at;
-        });*/
-        debugger;
-        // set the selected instance to be the latest created
-        if (!this.scope.selected_instance && this.scope.instances.length) {
-          this.scope.selected_instance = this.scope.instances[0];
+      '{scope} instance': function () {
+        // Sets treeview options and recreates treeview
+        var rerender = false;
+        var options = this.scope.attr('treeViewOptions');
+        if (this.scope.instance) {
+          options.attr('parent_instance', this.scope.attr('instance'));
         }
-        //debugger;
-        //this.scope.options = JSON.parse(this.scope.options);
-        // parse template options
-        this.scope.options_template = JSON.parse(this.scope.options_template);
-        // add mustache path to template options
-        _.each(["header_view", "add_item_view"], function (tmplPath) {
-          if (this.scope.options_template[tmplPath]) {
-            this.scope.options_template[tmplPath] = GGRC.mustache_path + this.scope.options_template[tmplPath];
-          }
-        }.bind(this));
-        //this.scope.options = GGRC.WidgetList.get_current_page_widgets().current.content_controller_options;
-        // make header view blank or you'll be appending it over and over
-        //this.scope.options_template.header_view = '';
-        this.scope.options = this.scope.options_template;
-        this.scope.options.model = CMS.Models[this.scope.options_model];//CycleTaskGroupObjectTask;//this.scope.options_model;
-        this.scope.update();
-      },
-      '#dropdown-selector change': function (el, ev) {
-        debugger;
-        var selectedId = $(ev.target).val();
-        this.scope.selected_instance = _.find(this.scope.instances, function (inst) {
-          return inst.id === Number(selectedId);
-        });
-        this.scope.update();
+        if (this.scope._treeView) {
+          // If you already have a treeview you have it's header so don't
+          // add another one when creating a new treeview
+          options.show_header = false;
+          rerender = true;
+          // Empty and destroy treeview
+          this.scope._treeView.element.empty();
+          this.scope._treeView.destroy();
+        }
+        // Create a new treeview and display it
+        this.scope._treeView = new CMS.Controllers.TreeView(this.element.find('.tree-structure'), options);
+
+        // rebind header_view events
+        var treeview_dfd = this.scope._treeView.display();
+        if (rerender) {
+          // Because you're rerendering only the treeview you must bind events
+          // for treeview header
+          treeview_dfd.then(function (data) {
+            if (this.scope._treeView.element) {
+              var treeview = this.scope._treeView.element.control();
+              if (treeview) {
+                treeview.bind_header_events();
+              }
+            }
+          }.bind(this));
+        }
       }
+    }
+  });
+
+  can.Component.extend({
+    tag: "dropdown-mapping",
+    template: can.view(GGRC.mustache_path +
+      '/workflows/dropdown_mapping.mustache'),
+    scope: {
+      instances: [],
+      selectedId: undefined
     }
   });
 })(this.CMS, this.GGRC, this.can, this.can.$);
