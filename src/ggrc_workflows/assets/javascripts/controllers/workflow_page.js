@@ -265,11 +265,11 @@
     tag: "cycle-end-cycle",
     template: "<content/>",
     events: {
-      click: function() {
-        this.scope.cycle.refresh().then(function(cycle) {
-          cycle.attr('is_current', false).save().then(function() {
+      click: function () {
+        this.scope.cycle.refresh().then(function (cycle) {
+          cycle.attr('is_current', false).save().then(function () {
             return GGRC.page_instance().refresh();
-          }).then(function(){
+          }).then(function () {
             // We need to update person's assigned_tasks mapping manually
             var person_id = GGRC.current_user.id,
                 person = CMS.Models.Person.cache[person_id];
@@ -284,149 +284,4 @@
     }
   });
 
-
-
-
-/*
-  can.Component.extend({
-    tag: "dropdown-cycles",
-    template: '<content/>',
-    scope: {
-      update_end_sprint_button: function () {
-        //debugger;
-        // update the 'End sprint' button
-        var renderer = can.view.mustache('' +
-        '<cycle-end-cycle cycle="instance">' +
-          '{{#is_allowed "update" cycle.workflow.reify}}' +
-          '{{#if cycle.is_current}}' +
-            '<button class="btn btn-draft btn-small end-cycle">End Cycle{{{cycle.id}}}</button>' +
-          '{{/if}}' +
-          '{{/is_allowed}}' +
-        '</cycle-end-cycle>');
-        var endSprintHtml = renderer({
-          instance: this.selected_cycle
-        });
-        $("#end_cycle").html(endSprintHtml);
-      },
-      // abc: [this.update, this.onChangeFunctions]
-    },
-    events: {
-      init: function () {
-        //debugger;
-      },
-      '#dropdown-selector change': function (el, ev) {
-        //debugger;
-        this.scope.update_end_sprint_button();
-      }
-    }
-  });*/
-
-
-
-
-  can.Component.extend({
-    tag: "dropdown-cycles-mapping",
-    template: can.view(GGRC.mustache_path +
-      '/workflows/dropdown_cycles.mustache'),
-    scope: {
-      instances: [],
-      visible: false,
-      selected_instance: undefined,
-      treeview_element: '@',
-      options: '@',
-      options_template: '@',
-      options_parent_instance: undefined,
-      options_model: '@',
-      update_mappings: function () {
-        var treeViewHtml;
-        if (!this.selected_instance) {
-          return;
-        }
-        this.options.parent_instance = this.selected_instance;
-
-        treeViewHtml = can.view(GGRC.mustache_path + '/workflows/tree_view.mustache',
-          this.options);
-
-        // remove the tree view
-        $("#sprints > " + this.treeview_element).remove();
-        // append the new tree view
-        $("#sprints").append(treeViewHtml);
-      },
-      update_end_sprint_button: function () {
-        //debugger;
-        // update the 'End sprint' button
-        // TODO what if you added a boolean variable in scope that would tell
-        // if the current cycle is_current and then just do {{#selected_is_current}}
-        // or even simpler maybe just {{#selected_instance.is_current}} ? 
-        var renderer = can.view.mustache('' +
-        '<cycle-end-cycle cycle="instance">' +
-          '{{#is_allowed "update" cycle.workflow.reify}}' +
-          '{{#if cycle.is_current}}' +
-            '<button class="btn btn-draft btn-small end-cycle">End Cycle{{{cycle.id}}}</button>' +
-          '{{/if}}' +
-          '{{/is_allowed}}' +
-        '</cycle-end-cycle>');
-        var endSprintHtml = renderer({
-          instance: this.selected_instance
-        });
-        $("#end_cycle").html(endSprintHtml);
-      },
-      /*onChangeFunctions: function () {
-        return [this.update_mappings, this.update_end_sprint_button];
-      },*/
-      update: function () {
-        //debugger;
-        /*_.each(this.onChangeFunctions(), function (fn) {
-          fn.call(this);
-        }.bind(this));*/
-        this.update_mappings();
-        this.update_end_sprint_button();
-      }
-      // abc: [this.update, this.onChangeFunctions]
-    },
-    events: {
-      init: function () {
-        /*var curCycles = _.filter(this.scope.cycles, function (cycle) {
-          return cycle.is_current;
-        });
-        this.scope.current_cycles = curCycles;
-        if (curCycles.length) {
-          this.scope.selected_cycle = curCycles[0];
-        }*/
-        // sort instances by created at - the newest being the first
-        /*this.scope.cycles = _.sortBy(this.scope.cycles, function(inst) {
-          return -inst.created_at;
-        });*/
-        debugger;
-        // set the selected instance to be the latest created
-        if (!this.scope.selected_instance && this.scope.instances.length) {
-          this.scope.selected_instance = this.scope.instances[0];
-        }
-        //debugger;
-        //this.scope.options = JSON.parse(this.scope.options);
-        // parse template options
-        this.scope.options_template = JSON.parse(this.scope.options_template);
-        // add mustache path to template options
-        _.each(["header_view", "add_item_view"], function (tmplPath) {
-          if (this.scope.options_template[tmplPath]) {
-            this.scope.options_template[tmplPath] = GGRC.mustache_path + this.scope.options_template[tmplPath];
-          }
-        }.bind(this));
-        //this.scope.options = GGRC.WidgetList.get_current_page_widgets().current.content_controller_options;
-        // make header view blank or you'll be appending it over and over
-        //this.scope.options_template.header_view = '';
-        this.scope.options = this.scope.options_template;
-        this.scope.options.model = CMS.Models[this.scope.options_model];//CycleTaskGroupObjectTask;//this.scope.options_model;
-        this.scope.update();
-      },
-      '#dropdown-selector change': function (el, ev) {
-        debugger;
-        var selectedId = $(ev.target).val();
-        this.scope.selected_instance = _.find(this.scope.instances, function (inst) {
-          return inst.id === Number(selectedId);
-        });
-        this.scope.update();
-      }
-    }
-  });
 })(this.CMS, this.GGRC, this.can, this.can.$);

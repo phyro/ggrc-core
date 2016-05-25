@@ -1,0 +1,15 @@
+{{!
+  Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+  Created By: tomaz@reciprocitylabs.com
+  Maintained By: tomaz@reciprocitylabs.com
+}}
+
+
+<select can-value="selectedId" class="input-block-level">
+  {{#each instances}}
+    <option value="{{id}}">
+      {{dropdown_name @index}}
+    </option>
+  {{/each}}
+</select>
