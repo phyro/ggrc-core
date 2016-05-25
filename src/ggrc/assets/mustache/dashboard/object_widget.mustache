@@ -57,11 +57,6 @@
   {{/if_equals}}
 
   <section class="content">
-    {{#if_helpers '\
-      #if_match' widget_initial_content 'mustache'}}
-      {{{renderLive widget_initial_content}}}
-    {{else}}
-      {{{widget_initial_content}}}
-    {{/if_helpers}}
+    {{{widget_initial_content}}}
   </section>
 {{!/section}}

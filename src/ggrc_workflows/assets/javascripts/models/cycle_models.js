@@ -94,7 +94,6 @@
       modified_by: "CMS.Models.Person.stub",
       context: "CMS.Models.Context.stub"
     },
-
     tree_view_options: {
       show_view: _mustache_path + "/tree.mustache",
       header_view : _mustache_path + "/tree_header.mustache",
@@ -152,12 +151,26 @@
       });
     },
     overdue: overdue_compute,
-    dropdown_name: function () {
-      if (this.is_current) {
-        return "ENDS ON: " + this.end_date;
-      } else {
-        return "ENDED ON:" + this.end_date;
+    dropdown_name: function (index, ctx) {
+      var frequency;
+      var title;
+      var nrCycles;
+      var workflow;
+      // TODO can it be undefined?
+      if (_.isUndefined(this.workflow)) {
+        return "";
       }
+      if (_.isFunction(index)) {
+        index = index();
+      }
+      workflow = this.workflow.reify();
+      nrCycles = workflow.cycles.length;
+      frequency = _.capitalize(workflow.frequency);
+      title = frequency + " Sprint " + (nrCycles-index) + " ENDS ON: " + this.end_date;
+      if (!this.is_current) {
+        title += " ARCHIVED";
+      }
+      return title;
     }
   });
 

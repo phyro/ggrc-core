@@ -1,32 +1,45 @@
-<div class="row-fluid">
-      <div data-id="state_hidden" class="span4 hidable">
-  {{#with_page_object_as 'parent_instance'}}
-  {{#using workflow=parent_instance}}
-  {{!#using cycles=workflow.cycles}}
-  {{#with_reified workflow 'cycles'}}
+{{!
+  Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+  Created By: tomaz@reciprocitylabs.com
+  Maintained By: tomaz@reciprocitylabs.com
+}}
+
+{{#with_reified workflow 'cycles'}}
   {{#sortBy cycles 'created_at' 'desc'}}
 
-    <dropdown-cycles-mapping
-      instances='cycles'
+    <observer instances='cycles'>
 
-      options_template='{"draw_children": true,
-          "mapping": "cycle_task_group_object_tasks",
-          "header_view": "/cycle_task_group_object_tasks/tree_header.mustache",
-          "add_item_view": "/cycle_task_group_object_tasks/tree_add_item.mustache"}'
-      options_model='CycleTaskGroupObjectTask'
-      treeview_element='.tree-structure'>
+      <div class="row-fluid">
+        <div data-id="state_hidden" class="span12 hidable">
 
+          {{! render instances dropdown }}
+          <div data-id="state_hidden" class="span4 hidable">
+            <dropdown-mapping
+              instances='instances'
+              selected-id='selectedId'>
+            </dropdown-mapping>
+          </div>
 
+          {{! render end-cycle button }}
+          <div data-id="state_hidden" class="span8 hidable">
+            <cycle-end-cycle cycle="selectedInstance">
+              {{#is_allowed "update" cycle.workflow.reify}}
+                {{#if cycle.is_current}}
+                  <button class="btn btn-draft btn-small end-cycle pull-right" style="display:inline-block;">
+                    End Cycle{{{cycle.id}}}
+                  </button>
+                {{/if}}
+              {{/is_allowed}}
+            </cycle-end-cycle>
+          </div>
 
-    </dropdown-cycles-mapping>
+        </div>
+      </div>
+
+      <tree-view-comp tree-view-options="tree_view_options" instance="selectedInstance">
+      </tree-view-comp>
+
+    </observer>
   {{/sortBy}}
-  {{/workflow_cycles}}
-  {{!/using}}
-  {{/using}}
-  {{/with_page_object_as 'page_instance'}}
-  </div>
-  <div id='end_cycle' data-id="state_hidden" class="span8">
-  </div>
-</div>
-
-<div id="sprints"><ul class="tree-structure new-tree"></ul></div>
+{{/with_reified}}

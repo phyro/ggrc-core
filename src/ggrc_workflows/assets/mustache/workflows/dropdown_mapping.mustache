@@ -5,7 +5,11 @@
   Maintained By: tomaz@reciprocitylabs.com
 }}
 
-<ul class="tree-structure new-tree"
-  {{data 'options'}}
-  {{ (el) -> el.cms_controllers_tree_view(el.data("options")).control("tree_view").display() }}>
-</ul>
+
+<select can-value="selectedId" class="input-block-level">
+  {{#each instances}}
+    <option value="{{id}}">
+      {{dropdown_name @index}}
+    </option>
+  {{/each}}
+</select>
