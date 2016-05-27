@@ -239,6 +239,57 @@
             contact_id: binding.instance.id
           });
         }, 'Cycle')
+      },
+      TaskGroupTask: {
+        _canonical: {
+          related_objects_as_source: [
+            'DataAsset', 'Facility', 'Market', 'OrgGroup', 'Vendor', 'Process',
+            'Product', 'Project', 'System', 'Regulation', 'Policy', 'Contract',
+            'Standard', 'Program', 'Issue', 'Control', 'Section', 'Clause',
+            'Objective', 'Audit', 'Assessment', 'AccessGroup', 'Request',
+            'Document', 'Risk', 'Threat'
+          ]
+        },
+        related_objects_as_source: Proxy(
+          null, 'destination', 'Relationship', 'source', 'related_destinations'),
+        related_objects_as_destination: Proxy(
+          null, 'source', 'Relationship', 'destination', 'related_sources'),
+        related_objects: Multi(['related_objects_as_source', 'related_objects_as_destination']),
+        destinations: Direct('Relationship', 'source', 'related_destinations'),
+        sources: Direct('Relationship', 'destination', 'related_sources'),
+        relationships: Multi(['sources', 'destinations']),
+        related_access_groups: TypeFilter('related_objects', 'AccessGroup'),
+        related_data_assets: TypeFilter('related_objects', 'DataAsset'),
+        related_facilities: TypeFilter('related_objects', 'Facility'),
+        related_markets: TypeFilter('related_objects', 'Market'),
+        related_org_groups: TypeFilter('related_objects', 'OrgGroup'),
+        related_vendors: TypeFilter('related_objects', 'Vendor'),
+        related_processes: TypeFilter('related_objects', 'Process'),
+        related_products: TypeFilter('related_objects', 'Product'),
+        related_projects: TypeFilter('related_objects', 'Project'),
+        related_systems: TypeFilter('related_objects', 'System'),
+        related_issues: TypeFilter('related_objects', 'Issue'),
+        related_audits: TypeFilter('related_objects', 'Audit'),
+        related_controls: TypeFilter('related_objects', 'Control'),
+        related_documents: TypeFilter('related_objects', 'Document'),
+        related_assessments: TypeFilter('related_objects', 'Assessment'),
+        related_requests: TypeFilter('related_objects', 'Request'),
+        regulations: TypeFilter('related_objects', 'Regulation'),
+        contracts: TypeFilter('related_objects', 'Contract'),
+        policies: TypeFilter('related_objects', 'Policy'),
+        standards: TypeFilter('related_objects', 'Standard'),
+        programs: TypeFilter('related_objects', 'Program'),
+        controls: TypeFilter('related_objects', 'Control'),
+        sections: TypeFilter('related_objects', 'Section'),
+        clauses: TypeFilter('related_objects', 'Clause'),
+        objectives: TypeFilter('related_objects', 'Objective'),
+        task_group: Direct(
+          'TaskGroup',
+          'task_group_tasks',
+          'task_group'),
+        info_related_objects: CustomFilter('related_objects', function (related_objects) {
+          return !_.includes(['Comment', 'Document', 'Person'], related_objects.instance.type);
+        })
       }
     };
 
@@ -429,6 +480,23 @@
                 add_item_view: GGRC.mustache_path + '/wf_people/tree_add_item.mustache'
               }
             },
+
+            task_group: {
+              widget_id: 'task_group',
+              widget_name: 'Template',
+              widget_icon: 'task_group',
+              content_controller: CMS.Controllers.Template,
+              content_controller_options: {
+                parent_instance: object,
+                model: CMS.Models.TaskGroupTask, //CMS.Models.TaskGroup,
+                show_view: GGRC.mustache_path + '/cycle_task_group_object_tasks/tree.mustache',
+                sortable: true,
+                sort_property: 'sort_index',
+                mapping: 'tasks',//'task_groups',
+                draw_children: true,
+                add_item_view: GGRC.mustache_path + '/task_group_tasks/task_group_subtree_add_item.mustache'
+              }
+            },/*
             task_group: {
               widget_id: 'task_group',
               widget_name: 'Setup',
@@ -467,7 +535,8 @@
                   }
                 ]
               }
-            }
+            }*/
+
           }
     );
 

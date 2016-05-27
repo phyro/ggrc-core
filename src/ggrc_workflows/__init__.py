@@ -296,10 +296,31 @@ def build_cycle(cycle, current_user=None, base_date=None):
         cycle_task_group_object_task = _create_cycle_task(
             task_group_task, cycle, cycle_task_group, current_user, base_date)
 
-        for task_group_object in task_group.task_group_objects:
+        #import ipdb; ipdb.set_trace()
+        related_objects = task_group_task.related_sources +\
+                          task_group_task.related_destinations
+        for related_object in related_objects:
+          # Get the object related to this task group task
+          if isinstance(related_object.destination, task_group_task.__class__):
+            related_object_instance = related_object.source
+          else:
+            related_object_instance = related_object.destination
+          # Insert a new relationship with it's cycle task group object task
+          db.session.add(Relationship(source=cycle_task_group_object_task,
+                                      destination=related_object_instance))
+          # TODO: also implement this for old workflows
+          # TODO: what if they have an old style workflow and they go to setup
+          #   tab and map objects to tasks? When the next cycle happens and
+          #   the old style relationships get generated it will ignore the
+          #   relationships created directly on the task
+          # TODO: MIGRATION:
+          #         - should the migration transfer objects from task_group_objects
+          #           to regular relationships only for newstyle workflows?
+          #           (create_old_style_cycle still relies on task_group_objects)
+        """for task_group_object in task_group.task_group_objects:
           object_ = task_group_object.object
           db.session.add(Relationship(source=cycle_task_group_object_task,
-                                      destination=object_))
+                                      destination=object_))"""
 
   update_cycle_dates(cycle)
 
