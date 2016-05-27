@@ -1,0 +1,74 @@
+/*!
+    Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+    Created By: tomaz@reciprocitylabs.com
+    Maintained By: tomaz@reciprocitylabs.com
+*/
+
+(function (can, $) {
+  'use strict';
+  /**
+   *  Treeview component which renders a treeview with given options
+   *
+   *  @param {JSON} treeViewOptions - options for the treeview eg.
+   *   {
+   *     draw_children: true,
+   *     parent_instance: object,
+   *     model: CMS.Models.CycleTaskGroupObjectTask,
+   *     mapping: 'cycle_task_group_object_tasks',
+   *     header_view: GGRC.mustache_path +
+            '/cycle_task_group_object_tasks/tree_header.mustache',
+   *     add_item_view: GGRC.mustache_path +
+   *       '/cycle_task_group_object_tasks/tree_add_item.mustache'
+   *   }
+   *  @param {can.Model} instance - instance that will act as
+   *    parent_instance for the treeview (mapping will be applied on it)
+   */
+
+  GGRC.Components('treeview', {
+    tag: "tree-view",
+    template: "<div><ul class='tree-structure new-tree'></ul></div>",
+    scope: {
+      treeViewOptions: undefined,
+      instance: undefined
+    },
+    events: {
+      '{scope} instance': function () {
+        // Sets treeview options and recreates treeview
+        var treeview_dfd;
+        var rerender = false;
+        var options = this.scope.attr('treeViewOptions');
+        if (this.scope.instance) {
+          options.attr('parent_instance', this.scope.attr('instance'));
+        }
+        if (this.scope._treeView) {
+          // If you already have a treeview you have it's header so don't
+          // add another one when creating a new treeview
+          options.show_header = false;
+          rerender = true;
+          // Empty and destroy treeview
+          this.scope._treeView.element.empty();
+          this.scope._treeView.destroy();
+        }
+        // Create a new treeview and display it
+        this.scope._treeView = new CMS.Controllers.TreeView(
+          this.element.find('.tree-structure'), options);
+
+        // rebind header_view events
+        treeview_dfd = this.scope._treeView.display();
+        if (rerender) {
+          // Because you're rerendering only the treeview you must bind events
+          // for treeview header
+          treeview_dfd.then(function (data) {
+            if (this.scope._treeView.element) {
+              var treeview = this.scope._treeView.element.control();
+              if (treeview) {
+                treeview.bind_header_events();
+              }
+            }
+          }.bind(this));
+        }
+      }
+    }
+  });
+})(window.can, window.can.$);

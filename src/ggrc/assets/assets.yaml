@@ -121,6 +121,7 @@ dashboard-js-files:
   - components/paginate.js
   - components/tabs.js
   - components/assessment_attributes.js
+  - components/treeview/treeview.js
   #- d3.v2.js
   #- related_graph.js
 

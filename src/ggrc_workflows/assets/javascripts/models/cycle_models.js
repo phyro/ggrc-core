@@ -152,6 +152,28 @@
       });
     },
     overdue: overdue_compute,
+    dropdown_name: function (index, ctx) {
+      var frequency;
+      var title;
+      var nrCycles;
+      var workflow;
+      // TODO can it be undefined?
+      if (_.isUndefined(this.workflow)) {
+        return "";
+      }
+      if (_.isFunction(index)) {
+        index = index();
+      }
+      workflow = this.workflow.reify();
+      nrCycles = workflow.cycles.length;
+      frequency = _.capitalize(workflow.frequency);
+      title = frequency + " Sprint " + (nrCycles-index) +
+        " ENDS ON: " + this.end_date;
+      if (!this.is_current) {
+        title += " ARCHIVED";
+      }
+      return title;
+    }
   });
 
   _mustache_path = GGRC.mustache_path + "/cycle_task_entries";
