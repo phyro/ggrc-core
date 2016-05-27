@@ -11,13 +11,14 @@ from sqlalchemy import schema
 from ggrc import db
 from ggrc.login import get_current_user
 from ggrc.models.mixins import Base, Slugged, Titled, Described, WithContact
+from ggrc.models.relationship import Relatable
 from ggrc.models.types import JsonType
 from ggrc_workflows.models.mixins import RelativeTimeboxed
 from ggrc_workflows.models.task_group import TaskGroup
 
 
 class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
-                    Base, db.Model):
+                    Relatable, Base, db.Model):
   __tablename__ = 'task_group_tasks'
   __table_args__ = (
       schema.CheckConstraint('start_date <= end_date'),

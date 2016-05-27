@@ -94,6 +94,29 @@
       modified_by: "CMS.Models.Person.stub",
       task_group: "CMS.Models.TaskGroup.stub",
     },
+    tree_view_options: {
+      sort_property: 'sort_index',
+      //show_view: _mustache_path + "/tree.mustache",
+      attr_list: [
+        {attr_title: 'Title', attr_name: 'title'},
+        {attr_title: 'State', attr_name: 'status'},
+        {attr_title: 'Assignee', attr_name: 'assignee', attr_sort_field: 'contact.name|email'},
+        {attr_title: 'Start Date', attr_name: 'start_date'},
+        {attr_title: 'End Date', attr_name: 'end_date'},
+        {attr_title: 'Last Updated', attr_name: 'updated_at'}
+      ],
+      display_attr_names: ['title', 'assignee', 'start_date'],
+      mandatory_attr_name: ['title'],
+      draw_children: true,
+      child_options: [
+        {},
+        {
+          model: can.Model.Cacheable,
+          mapping: 'info_related_objects',
+          allow_creating: true
+        }
+      ]
+    },
 
     init: function() {
       var that = this;

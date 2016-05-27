@@ -1,7 +1,28 @@
 {{!
-    Copyright (C) 2015 Google Inc., authors, and contributors <see AUTHORS file>
+    Copyright (C) 2014 Google Inc., authors, and contributors <see AUTHORS file>
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-    Created By: ivan@reciprocitylabs.com
-    Maintained By: ivan@reciprocitylabs.com
+    Created By: anze@reciprocitylabs.com
+    Maintained By: anze@reciprocitylabs.com
 }}
+{{! TODO permissions}}
+{{! TODO sort_index still relevant?}}
+    <a
+      class="section-add"
+      href="javascript://"
+      rel="tooltip"
+      data-placement="left"
+      data-original-title="Create New Task"
+      data-object-plural="task_group_tasks"
+      data-modal-class="modal-wide" href="javascript://"
+      data-object-singular="TaskGroupTask"
+      data-toggle="modal-ajax-form"
+      data-modal-reset="reset"
+      {{debugger}}
+      data-object-params='{
+        "modal_title": "Create New Task",
+        "task_group": "{{ parent_instance.task_groups.0.id }}",
+        "context": "{{ parent_instance.context.id }}"
+        }'>
 
+      <i class="fa fa-plus-circle"></i>
+    </a>
