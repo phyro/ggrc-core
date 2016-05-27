@@ -126,7 +126,9 @@
         cycle_task_groups: Direct(
           'CycleTaskGroup', 'cycle', 'cycle_task_groups'),
         reify_cycle_task_groups: Reify('cycle_task_groups'),
-        workflow: Direct('Workflow', 'cycles', 'workflow')
+        workflow: Direct('Workflow', 'cycles', 'workflow'),
+        cycle_task_group_object_tasks: Cross('cycle_task_groups',
+                                             'cycle_task_group_tasks')
       },
 
       CycleTaskGroup: {
@@ -453,15 +455,21 @@
                   {
                     model: can.Model.Cacheable,
                     mapping: 'objects',
-                    show_view: GGRC.mustache_path + '/base_objects/task_group_subtree.mustache',
-                    footer_view: GGRC.mustache_path + '/base_objects/task_group_subtree_footer.mustache',
-                    add_item_view: GGRC.mustache_path + '/base_objects/task_group_subtree_add_item.mustache'
+                    show_view: GGRC.mustache_path +
+                      '/base_objects/task_group_subtree.mustache',
+                    footer_view: GGRC.mustache_path +
+                      '/base_objects/task_group_subtree_footer.mustache',
+                    add_item_view: GGRC.mustache_path +
+                      '/base_objects/task_group_subtree_add_item.mustache'
                   }, {
                     model: CMS.Models.TaskGroupTask,
                     mapping: 'task_group_tasks',
-                    show_view: GGRC.mustache_path + '/task_group_tasks/task_group_subtree.mustache',
-                    footer_view: GGRC.mustache_path + '/task_group_tasks/task_group_subtree_footer.mustache',
-                    add_item_view: GGRC.mustache_path + '/task_group_tasks/task_group_subtree_add_item.mustache',
+                    show_view: GGRC.mustache_path +
+                      '/task_group_tasks/task_group_subtree.mustache',
+                    footer_view: GGRC.mustache_path +
+                      '/task_group_tasks/task_group_subtree_footer.mustache',
+                    add_item_view: GGRC.mustache_path +
+                      '/task_group_tasks/task_group_subtree_add_item.mustache',
                     sort_property: 'sort_index',
                     allow_creating: true
                   }
@@ -486,20 +494,25 @@
           }
         };
         current_widget_descriptor = {
-          content_controller: CMS.Controllers.TreeView,
-          content_controller_selector: 'ul',
-          widget_initial_content: '<ul class="tree-structure new-tree"></ul>',
+          content_controller: CMS.Controllers.Sprints,
           widget_id: 'current',
-          widget_name: 'Active Cycles',
+          widget_name: 'Sprints',
           widget_icon: 'cycle',
           content_controller_options: {
             draw_children: true,
             parent_instance: object,
-            model: 'Cycle',
-            mapping: 'current_cycle',
-            header_view: GGRC.mustache_path + '/cycles/tree_header.mustache',
+            model: CMS.Models.CycleTaskGroupObjectTask,
+            mapping: 'cycle_task_group_object_tasks',
+            header_view: GGRC.mustache_path +
+              '/cycle_task_group_object_tasks/tree_header.mustache',
             add_item_view: GGRC.mustache_path +
-              '/cycle_task_group_object_tasks/tree_add_item.mustache'
+              '/cycle_task_group_object_tasks/tree_add_item.mustache',
+            // hide_filter is not really used by treeview but we want it in
+            // tree_header.mustache's context to specify if we should render
+            // the filter. For this to work we must set condition on this
+            // variable like done in cycletaskgroupobjecttask's tree_header
+            // TODO: try to hide the filter
+            hide_filter: true
           }
         };
         new_widget_descriptors.history = history_widget_descriptor;

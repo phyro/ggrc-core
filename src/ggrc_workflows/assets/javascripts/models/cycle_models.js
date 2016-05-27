@@ -69,7 +69,13 @@
       }
       activeCycleList = _.sortByOrder(
         activeCycleList, ['start_date'], ['desc']);
-      activeCycle = activeCycleList[0];
+      if (form.fromCycle) {
+        activeCycle = _.find(activeCycleList, function (cycle) {
+          return cycle.id === form.fromCycle.id;
+        });
+      } else {
+        activeCycle = activeCycleList[0];
+      }
       form.attr('workflow', {id: workflow.id, type: 'Workflow'});
       form.attr('context', {id: workflow.context.id, type: 'Context'});
       form.attr('cycle', {id: activeCycle.id, type: 'Cycle'});
@@ -152,6 +158,33 @@
       });
     },
     overdue: overdue_compute,
+    dropdownName: function (index, ctx) {
+      var frequency;
+      var sprintNr;
+      var extra = '';
+      var workflow;
+      var dropdownTemplate = _.template('<%= frequency %> Sprint <%= sprintNr %>' +
+        ' ENDS ON: <%= endDate %> <%= extra %>');
+      if (_.isUndefined(this.workflow)) {
+        return '';
+      }
+      if (_.isFunction(index)) {
+        index = index();
+      }
+      workflow = this.workflow.reify();
+      sprintNr = workflow.cycles.length - index;
+      frequency = _.capitalize(workflow.frequency).replace('_', ' ');
+      if (!this.is_current) {
+        extra = 'ARCHIVED';
+      }
+      // return rendered template
+      return dropdownTemplate({
+        frequency: frequency,
+        sprintNr: sprintNr,
+        endDate: this.end_date,
+        extra: extra
+      });
+    }
   });
 
   _mustache_path = GGRC.mustache_path + "/cycle_task_entries";

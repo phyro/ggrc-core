@@ -121,6 +121,7 @@ dashboard-js-files:
   - components/paginate.js
   - components/tabs.js
   - components/assessment_attributes.js
+  - components/treeview/treeview.js
   #- d3.v2.js
   #- related_graph.js
 
@@ -392,6 +393,7 @@ dashboard-js-template-files:
   - import_export/export/filter_query.mustache
   - mapper/relevant_filter.mustache
   - quick_form/confirm_buttons.mustache
+  - treeview/treeview.mustache
 
 dashboard-css-files:
   - dashboard.css

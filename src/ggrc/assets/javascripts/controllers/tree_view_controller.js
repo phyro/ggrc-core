@@ -684,6 +684,65 @@ CMS.Controllers.TreeLoader('CMS.Controllers.TreeView', {
     this._attached_deferred.resolve();
   },
 
+  unbind_header_events: function () {
+    var parent = this.element.parent();
+    parent.find('.filter-trigger > a').unbind();
+    parent.find('.widget-col-title[data-field]').unbind();
+    parent.find('.set-tree-attrs').unbind();
+    parent.find('.set-display-object-list').unbind();
+  },
+
+  empty_tree_lists: function () {
+    this.options.attr('list', undefined);
+    this.options.attr('original_list', undefined);
+  },
+
+  destroy: function () {
+    // If you destroy the controller then also unbind events
+    this.unbind_header_events();
+    // destroy 'list' information in options
+    this.empty_tree_lists();
+    // remove header data
+    Stickyfill.pause();
+    Stickyfill.kill();
+    // there are 3 elements put above treeview
+    // NOTE: check what happens if there is filter
+    this.element.prev().remove();
+    this.element.prev().remove();
+    this.element.prev().remove();
+    can.Control.prototype.destroy.call(this);
+  },
+
+  bind_header_events: function () {
+    // Bind events for header elements
+    var parent = this.element.parent();
+    // TODO: This is a workaround so we can toggle filter. We should refactor this ASAP.
+    can.bind.call(
+        parent.find('.filter-trigger > a'),
+        'click',
+        function () {
+          if (this.display_prefs.getFilterHidden()) {
+            this.show_filter();
+          } else {
+            this.hide_filter();
+          }
+        }.bind(this)
+    );
+
+    can.bind.call(parent.find('.widget-col-title[data-field]'),
+                  'click',
+                  this.sort.bind(this)
+                 );
+    can.bind.call(parent.find('.set-tree-attrs'),
+                  'click',
+                  this.set_tree_attrs.bind(this)
+                 );
+    can.bind.call(parent.find('.set-display-object-list'),
+                  'click',
+                  this.set_tree_display_list.bind(this)
+                 );
+  },
+
   init_view: function () {
     var dfds = [];
 
@@ -692,31 +751,7 @@ CMS.Controllers.TreeLoader('CMS.Controllers.TreeView', {
         can.view(this.options.header_view, $.when(this.options)).then(
           this._ifNotRemoved(function (frag) {
             this.element.before(frag);
-            // TODO: This is a workaround so we can toggle filter. We should refactor this ASAP.
-            can.bind.call(
-                this.element.parent().find('.filter-trigger > a'),
-                'click',
-                function () {
-                  if (this.display_prefs.getFilterHidden()) {
-                    this.show_filter();
-                  } else {
-                    this.hide_filter();
-                  }
-                }.bind(this)
-            );
-
-            can.bind.call(this.element.parent().find('.widget-col-title[data-field]'),
-                          'click',
-                          this.sort.bind(this)
-                         );
-            can.bind.call(this.element.parent().find('.set-tree-attrs'),
-                          'click',
-                          this.set_tree_attrs.bind(this)
-                         );
-            can.bind.call(this.element.parent().find('.set-display-object-list'),
-                          'click',
-                          this.set_tree_display_list.bind(this)
-                         );
+            this.bind_header_events();
           }.bind(this))));
     }
 
