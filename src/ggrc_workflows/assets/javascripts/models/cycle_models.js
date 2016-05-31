@@ -69,7 +69,14 @@
       }
       activeCycleList = _.sortByOrder(
         activeCycleList, ['start_date'], ['desc']);
-      activeCycle = activeCycleList[0];
+      debugger;
+      if (form.fromcycle) {
+        activeCycle = _.find(activeCycleList, function (cycle) {
+          return cycle.id === form.fromcycle.id;
+        });
+      } else {
+        activeCycle = activeCycleList[0];
+      }
       form.attr('workflow', {id: workflow.id, type: 'Workflow'});
       form.attr('context', {id: workflow.context.id, type: 'Context'});
       form.attr('cycle', {id: activeCycle.id, type: 'Cycle'});

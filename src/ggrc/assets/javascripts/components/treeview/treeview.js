@@ -35,17 +35,11 @@
     events: {
       '{scope} instance': function () {
         // Sets treeview options and recreates treeview
-        var treeview_dfd;
-        var rerender = false;
         var options = this.scope.attr('treeViewOptions');
         if (this.scope.instance) {
           options.attr('parent_instance', this.scope.attr('instance'));
         }
         if (this.scope._treeView) {
-          // If you already have a treeview you have it's header so don't
-          // add another one when creating a new treeview
-          options.show_header = false;
-          rerender = true;
           // Empty and destroy treeview
           this.scope._treeView.element.empty();
           this.scope._treeView.destroy();
@@ -54,20 +48,8 @@
         this.scope._treeView = new CMS.Controllers.TreeView(
           this.element.find('.tree-structure'), options);
 
-        // rebind header_view events
-        treeview_dfd = this.scope._treeView.display();
-        if (rerender) {
-          // Because you're rerendering only the treeview you must bind events
-          // for treeview header
-          treeview_dfd.then(function (data) {
-            if (this.scope._treeView.element) {
-              var treeview = this.scope._treeView.element.control();
-              if (treeview) {
-                treeview.bind_header_events();
-              }
-            }
-          }.bind(this));
-        }
+        // Display treeview
+        this.scope._treeView.display();
       }
     }
   });

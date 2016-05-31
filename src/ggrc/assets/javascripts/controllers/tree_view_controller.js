@@ -701,11 +701,21 @@ CMS.Controllers.TreeLoader('CMS.Controllers.TreeView', {
     this.unbind_header_events();
     // destroy 'list' information in options
     this.empty_tree_lists();
+    // remove header data
+    Stickyfill.pause();
+    Stickyfill.kill();
+    // there are 3 elements put above treeview
+    // NOTE: check what happens if there is filter
+    debugger;
+    this.element.prev().remove();
+    this.element.prev().remove();
+    this.element.prev().remove();
     can.Control.prototype.destroy.call(this);
   },
 
   bind_header_events: function () {
     // Bind events for header elements
+    // TODO: This is a workaround so we can toggle filter. We should refactor this ASAP.
     can.bind.call(
         this.element.parent().find('.filter-trigger > a'),
         'click',
@@ -740,7 +750,6 @@ CMS.Controllers.TreeLoader('CMS.Controllers.TreeView', {
         can.view(this.options.header_view, $.when(this.options)).then(
           this._ifNotRemoved(function (frag) {
             this.element.before(frag);
-            // TODO: This is a workaround so we can toggle filter. We should refactor this ASAP.
             this.bind_header_events();
           }.bind(this))));
     }

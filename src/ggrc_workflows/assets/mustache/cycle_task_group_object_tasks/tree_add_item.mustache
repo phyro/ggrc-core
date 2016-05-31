@@ -29,6 +29,7 @@
         {{#if_equals parent_instance.type 'Cycle'}}
           {{#if parent_instance.is_current}}
             "workflow":{"id":{{parent_instance.workflow.id}},"type":"Workflow"},
+            "fromcycle":{"id":{{parent_instance.id}},"type":"Cycle"},
           {{/if}}
         {{/if_equals}}
 
