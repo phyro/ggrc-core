@@ -216,4 +216,42 @@
     }
   });
 
+  Mustache.registerHelper('getRelativeDayName', function (relativeDay,
+                                                          options) {
+    var days;
+    if (_.isFunction(relativeDay)) {
+      relativeDay = relativeDay();
+    }
+    days = {
+      1: 'Monday',
+      2: 'Tuesday',
+      3: 'Wednesday',
+      4: 'Thursday',
+      5: 'Friday'
+    };
+    return days[relativeDay];
+  });
+
+  Mustache.registerHelper('getRelativeQuarterlyMonthsName', function (relativeMonth,
+                                                          options) {
+    var quarterlyMonths;
+    if (_.isFunction(relativeMonth)) {
+      relativeMonth = relativeMonth();
+    }
+    quarterlyMonths = {
+      1: "Jan, Apr, Jul, Oct",
+      2: "Feb, May, Aug, Nov",
+      3: "Mar, Jun, Sep, Dec"
+    }
+    return quarterlyMonths[relativeMonth];
+  });
+
+  Mustache.registerHelper('getRelativeMonthName', function (relativeMonth,
+                                                          options) {
+    if (_.isFunction(relativeMonth)) {
+      relativeMonth = relativeMonth();
+    }
+    return moment(String(relativeMonth)).format("MMMM");
+  });
+
 })(this.can, this.can.$, this.Mustache);

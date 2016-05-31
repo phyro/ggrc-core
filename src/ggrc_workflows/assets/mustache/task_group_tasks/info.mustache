@@ -1,0 +1,72 @@
+{{!
+    Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+    Created By: tomaz@reciprocitylabs.com
+    Maintained By: tomaz@reciprocitylabs.com
+}}
+
+
+{{#instance}}
+  <section class="info{{#is_info_pin}} sticky-info-panel{{/is_info_pin}}">
+
+    {{#is_info_pin}}
+      {{{render '/static/mustache/base_objects/info-pin.mustache'}}}
+    {{/is_info_pin}}
+
+    <div class="info-pane-utility">
+      {{> /static/mustache/base_objects/dropdown_menu.mustache}}
+    </div>
+
+    {{! TODO add permission check for Edit and delete? }}
+
+    <div class="tier-content">
+      {{{render '/static/mustache/base_objects/general_info.mustache' instance=instance}}}
+
+      <div class="row-fluid wrap-row">
+        <div class="span6">
+          <h6>Assignee</h6>
+          {{#using contact=instance.contact}}
+          <div>{{firstnonempty contact.name contact.email ''}}</div>
+          {{/using}}
+        </div>
+
+      {{! Show dates based on parent workflow frequency }}
+      {{#using taskgroup=instance.task_group}}
+        {{#using workflow=taskgroup.workflow}}
+          {{{render '/static/mustache/task_group_tasks/dates_partial.mustache' instance=instance}}}
+        {{/using}}
+      {{/using}}
+      </div>
+
+      <div class="row-fluid wrap-row">
+        <div class="span12">
+          {{{render "/static/mustache/base_templates/mapped_objects.mustache" instance=instance }}}
+        </div>
+      </div>
+
+      <div class="row-fluid wrap-row">
+        <div class="span12">
+          {{#if_helpers '\
+            #if_equals' instance.task_type 'text' '\
+            or #if_equals' instance.task_type "" '\
+            or #if_null' instance.task_type}}
+            <h6>Task description</h6>
+            <div class="rtf-block">
+              {{{firstnonempty instance.description 'No additional details'}}}
+            </div>
+          {{/if_helpers}}
+          {{#if_equals instance.task_type 'menu'}}
+            <h6>Response Options</h6>
+            {{instance.response_options_csv}}
+          {{/if_equals}}
+          {{#if_equals instance.task_type 'checkbox'}}
+            <h6>Response Options</h6>
+            {{instance.response_options_csv}}
+          {{/if_equals}}
+          <br>
+        </div>
+      </div>
+
+    </div>
+  </section>
+{{/instance}}
