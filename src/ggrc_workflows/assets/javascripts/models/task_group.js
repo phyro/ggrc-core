@@ -84,7 +84,7 @@
     update: "PUT /api/task_group_tasks/{id}",
     destroy: "DELETE /api/task_group_tasks/{id}",
 
-    mixins : ["contactable"],
+    mixins: ["contactable"],
     permalink_options: {
       url: "<%= base.viewLink %>#task_group_widget/task_group/<%= instance.task_group.id %>",
       base: "task_group:workflow"
@@ -93,6 +93,13 @@
       context: "CMS.Models.Context.stub",
       modified_by: "CMS.Models.Person.stub",
       task_group: "CMS.Models.TaskGroup.stub",
+    },
+    info_pane_options: {
+      mapped_objects: {
+        model: can.Model.Cacheable,
+        mapping: 'info_related_objects',
+        show_view: GGRC.mustache_path + '/base_templates/subtree.mustache'
+      }
     },
     tree_view_options: {
       sort_property: 'sort_index',

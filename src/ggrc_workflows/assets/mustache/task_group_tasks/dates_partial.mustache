@@ -1,0 +1,126 @@
+{{!
+    Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+    Created By: tomaz@reciprocitylabs.com
+    Maintained By: tomaz@reciprocitylabs.com
+}}
+
+{{#switch workflow.frequency}}
+  {{#case "one_time"}}
+  <div class="span3">
+    <h6>Start date</h6>
+    {{#if instance.start_date}}
+      <p>
+        {{localize_date instance.start_date}}
+      </p>
+    {{else}}
+      <span class="empty-message">None</span>
+    {{/if}}
+  </div>
+
+  <div class="span3">
+    <h6>End date</h6>
+    {{#if instance.end_date}}
+      <p>
+        {{localize_date instance.end_date }}
+      </p>
+    {{else}}
+      <span class="empty-message">None</span>
+    {{/if}}
+  </div>
+  {{/case}}
+  {{#case "weekly"}}
+    <div class="span3">
+      <h6>Start day</h6>
+      {{#if instance.relative_start_day}}
+        <p>
+          {{getRelativeDayName instance.relative_start_day}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+
+    <div class="span3">
+      <h6>End day</h6>
+      {{#if instance.relative_end_day}}
+        <p>
+          {{getRelativeDayName instance.relative_end_day}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+  {{/case}}
+  {{#case "monthly"}}
+    <div class="span3">
+      <h6>Starts every</h6>
+      {{#if instance.relative_start_day}}
+        <p>
+          {{instance.relative_start_day}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+
+    <div class="span3">
+      <h6>Due every</h6>
+      {{#if instance.relative_end_day}}
+        <p>
+          {{instance.relative_end_day}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+  {{/case}}
+  {{#case "quarterly"}}
+    <div class="span3">
+      <h6>Starts</h6>
+      {{#if instance.relative_start_day}}
+        <p>
+          {{getRelativeQuarterlyMonthsName instance.relative_start_month}} -
+          {{instance.relative_start_day}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+
+    <div class="span3">
+      <h6>Due</h6>
+      {{#if instance.relative_end_day}}
+        <p>
+          {{getRelativeQuarterlyMonthsName instance.relative_end_month}} -
+          {{instance.relative_end_day}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+  {{/case}}
+  {{#case "annually"}}
+    <div class="span3">
+      <h6>Starts every</h6>
+      {{#if instance.relative_start_day}}
+        <p>
+          {{instance.relative_start_day}} - {{getRelativeMonthName instance.relative_start_month}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+
+    <div class="span3">
+      <h6>Due every</h6>
+      {{#if instance.relative_end_day}}
+        <p>
+          {{instance.relative_end_day}} - {{getRelativeMonthName instance.relative_end_month}}
+        </p>
+      {{else}}
+        <span class="empty-message">None</span>
+      {{/if}}
+    </div>
+  {{/case}}
+{{/switch}}
