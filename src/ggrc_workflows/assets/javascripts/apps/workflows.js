@@ -489,7 +489,7 @@
               content_controller_options: {
                 parent_instance: object,
                 model: CMS.Models.TaskGroupTask, //CMS.Models.TaskGroup,
-                show_view: GGRC.mustache_path + '/cycle_task_group_object_tasks/tree.mustache',
+                show_view: GGRC.mustache_path + '/task_group_tasks/tree.mustache',
                 sortable: true,
                 sort_property: 'sort_index',
                 mapping: 'tasks',//'task_groups',

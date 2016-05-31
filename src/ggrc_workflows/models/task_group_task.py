@@ -83,7 +83,9 @@ class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
       'relative_end_day',
       'object_approval',
       'task_type',
-      'response_options'
+      'response_options',
+      'start_date',
+      'end_date'
   ]
   _sanitize_html = []
   _aliases = {

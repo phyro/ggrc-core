@@ -84,7 +84,7 @@
     update: "PUT /api/task_group_tasks/{id}",
     destroy: "DELETE /api/task_group_tasks/{id}",
 
-    mixins : ["contactable"],
+    mixins: ["contactable"],
     permalink_options: {
       url: "<%= base.viewLink %>#task_group_widget/task_group/<%= instance.task_group.id %>",
       base: "task_group:workflow"
@@ -94,12 +94,19 @@
       modified_by: "CMS.Models.Person.stub",
       task_group: "CMS.Models.TaskGroup.stub",
     },
+    info_pane_options: {
+      mapped_objects: {
+        model: can.Model.Cacheable,
+        mapping: 'info_related_objects',
+        show_view: GGRC.mustache_path + '/base_templates/subtree.mustache'
+      }
+    },
     tree_view_options: {
       sort_property: 'sort_index',
       //show_view: _mustache_path + "/tree.mustache",
       attr_list: [
         {attr_title: 'Title', attr_name: 'title'},
-        {attr_title: 'State', attr_name: 'status'},
+        // {attr_title: 'State', attr_name: 'status'},
         {attr_title: 'Assignee', attr_name: 'assignee', attr_sort_field: 'contact.name|email'},
         {attr_title: 'Start Date', attr_name: 'start_date'},
         {attr_title: 'End Date', attr_name: 'end_date'},
@@ -172,6 +179,7 @@
     }
   }, {
     init : function() {
+
       this._super && this._super.apply(this, arguments);
       this.bind('task_group', function (ev, newTask) {
         if (!newTask) {

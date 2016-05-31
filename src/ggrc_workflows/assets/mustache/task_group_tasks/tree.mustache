@@ -1,0 +1,120 @@
+{{!
+    Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+    Created By: tomaz@reciprocitylabs.com
+    Maintained By: tomaz@reciprocitylabs.com
+}}
+
+<li class="tree-item item-list" data-object-id="{{instance.id}}" data-object-type="{{instance.class.table_singular}}"
+  {{#instance}}{{data 'model'}}{{/instance}}>
+  <div class="item-main" {{data 'model'}}>
+    <div class="item-wrap">
+      {{{render '/static/mustache/base_objects/open_close.mustache' instance=instance}}}
+      <div class="select">
+        <div class="item-data">
+          <div class="row-fluid">
+            <div class="span{{display_options.title_width}}">
+              <div class="title tree-title-area" rel="tooltip" data-placement="left" title="" data-original-title="{{instance.title}}">
+                <i class="fa fa-calendar-check-o"></i>
+                {{instance.title}}
+              </div>
+            </div>
+
+            <div class="span{{display_options.selectable_width}}">
+              <div class="row-fluid">
+                {{#display_attr_list}}
+                  <div class="span{{display_options.selectable_attr_width}}">
+                    <div class="owner tree-title-area">
+                      {{#instance}}
+                        {{#switch attr_name}}
+                          {{#case 'assignee'}}
+                            {{#using contact=instance.contact}}
+                              <div>{{firstnonempty contact.name contact.email ''}}</div>
+                            {{/using}}
+                          {{/case}}
+                          {{#case 'start_date'}}
+                            {{#using taskgroup=instance.task_group}}
+                              {{#using workflow=taskgroup.workflow}}
+                                {{#switch workflow.frequency}}
+                                  {{#case 'one_time'}}
+                                    {{localize_date instance.start_date}}
+                                  {{/case}}
+                                  {{#case 'weekly'}}
+                                    {{getRelativeDayName instance.relative_start_day}}
+                                  {{/case}}
+                                  {{#case 'monthly'}}
+                                    {{instance.relative_start_day}}
+                                  {{/case}}
+                                  {{#case 'quarterly'}}
+                                    {{getRelativeQuarterlyMonthsName instance.relative_start_month}} -
+                                    {{instance.relative_start_day}}
+                                  {{/case}}
+                                  {{#case 'annually'}}
+                                    {{instance.relative_start_day}} -
+                                    {{getRelativeMonthName instance.relative_start_month}}
+                                  {{/case}}
+                                {{/switch}}
+                              {{/using}}
+                            {{/using}}
+                          {{/case}}
+                          {{#case 'end_date'}}
+                            {{#using taskgroup=instance.task_group}}
+                              {{#using workflow=taskgroup.workflow}}
+                                {{#switch workflow.frequency}}
+                                  {{#case 'one_time'}}
+                                    {{localize_date instance.end_date}}
+                                  {{/case}}
+                                  {{#case 'weekly'}}
+                                    {{getRelativeDayName instance.relative_end_day}}
+                                  {{/case}}
+                                  {{#case 'monthly'}}
+                                    {{instance.relative_end_day}}
+                                  {{/case}}
+                                  {{#case 'quarterly'}}
+                                    {{getRelativeQuarterlyMonthsName instance.relative_end_month}} -
+                                    {{instance.relative_end_day}}
+                                  {{/case}}
+                                  {{#case 'annually'}}
+                                    {{instance.relative_end_day}} -
+                                    {{getRelativeMonthName instance.relative_end_month}}
+                                  {{/case}}
+                                {{/switch}}
+                              {{/using}}
+                            {{/using}}
+                          {{/case}}
+                          {{#default}}
+                            {{#if_helpers '\
+                              #if_equals' attr_name 'url' '\
+                              or #if_equals' attr_name 'reference_url'}}
+                                <a class="url" href="{{get_url_value attr_name instance}}" target="_blank">
+                                  {{get_default_attr_value attr_name instance}}
+                                </a>
+                            {{else}}
+                              {{get_default_attr_value attr_name instance}}
+                            {{/in_helpers}}
+                          {{/default}}
+                        {{/switch}}
+                      {{/instance}}
+                    </div>
+                  </div>
+                {{/display_attr_list}}
+              </div>
+            </div>
+          </div>
+        </div><!-- item-data end -->
+      </div><!-- select end -->
+    </div><!-- item-wrap end -->
+  </div><!-- item-main end -->
+
+  {{#if expanded}}
+  <div class="tier-2-info item-content">
+    <div class="tier-2-info-content">
+      {{#if draw_children}}
+        {{#child_options.1}}
+          <div class="inner-tree {{^if list.length}}hide{{/if}}">
+            <ul class="tree-structure new-tree" {{data 'options'}} {{ (el) -> el.cms_controllers_tree_view(el.data("options")) }}></ul>
+          </div>
+        {{/child_options.1}}
+      {{/if}}
+  {{/if}}
+</li>
