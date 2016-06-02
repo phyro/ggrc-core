@@ -305,7 +305,9 @@
         approval_tasks: CustomFilter('object_tasks', function (object) {
           return object.instance.attr('object_approval');
         }),
-        workflows: Cross('task_groups', 'workflow'),
+        // get workflow from cycletask->cycle->workflow
+        cycle: Cross('object_tasks', 'cycle'),
+        workflows: Cross('cycle', 'workflow'),
         approval_workflows: CustomFilter('workflows', function (binding) {
           return binding.instance.attr('object_approval');
         }),

@@ -143,7 +143,7 @@ class RelationshipHelper(object):
         cls.person_withcontact(object_type, related_type, related_ids),
         cls.program_audit(object_type, related_type, related_ids),
         cls.program_risk_assessment(object_type, related_type, related_ids),
-        cls.task_group_object(object_type, related_type, related_ids),
+        # cls.task_group_object(object_type, related_type, related_ids),
         cls.custom_attribute_mapping(object_type, related_type, related_ids),
     ]
 

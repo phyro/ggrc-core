@@ -46,7 +46,7 @@ class TestWorkflowObjectsImport(TestCase):
     self.assertEqual(1, Workflow.query.count())
     self.assertEqual(1, TaskGroup.query.count())
     self.assertEqual(4, TaskGroupTask.query.count())
-    self.assertEqual(2, TaskGroupObject.query.count())
+    self.assertEqual(0, TaskGroupObject.query.count())
 
     task2 = TaskGroupTask.query.filter_by(slug="t-2").first()
     task3 = TaskGroupTask.query.filter_by(slug="t-3").first()

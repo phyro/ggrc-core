@@ -67,12 +67,7 @@ class TaskGroup(
           "display_name": "Workflow",
           "mandatory": True,
           "filter_by": "_filter_by_workflow",
-      },
-      "task_group_objects": {
-          "display_name": "Objects",
-          "type": AttributeInfo.Type.SPECIAL_MAPPING,
-          "filter_by": "_filter_by_objects",
-      },
+      }
   }
 
   def copy(self, _other=None, **kwargs):
@@ -120,23 +115,4 @@ class TaskGroup(
     return Workflow.query.filter(
         (Workflow.id == cls.workflow_id) &
         (predicate(Workflow.slug) | predicate(Workflow.title))
-    ).exists()
-
-  @classmethod
-  def _filter_by_objects(cls, predicate):
-    parts = []
-    for model_name in all_models.__all__:
-      model = getattr(all_models, model_name)
-      query = getattr(model, "query", None)
-      field = getattr(model, "slug", getattr(model, "email", None))
-      if query is None or field is None or not hasattr(model, "id"):
-        continue
-      parts.append(query.filter(
-          (TaskGroupObject.object_type == model_name) &
-          (model.id == TaskGroupObject.object_id) &
-          predicate(field)
-      ).exists())
-    return TaskGroupObject.query.filter(
-        (TaskGroupObject.task_group_id == cls.id) &
-        or_(*parts)
     ).exists()

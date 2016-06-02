@@ -275,7 +275,8 @@ for wot in WORKFLOW_OBJECT_TYPES:
           (cycle_ctgo, "Cycle"),
           (wf_ctgo, "Workflow"),
           (tg_tgo, "TaskGroup"),
-          (task_tgo, "TaskGroupTask")]:
+          #(task_tgo, "TaskGroupTask")
+          ]:
     key = tuple(sorted([obj, wot]))
     _function_map[key] = f
 

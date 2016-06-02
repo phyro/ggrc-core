@@ -968,7 +968,6 @@ class TestGetWorkflowObjectColumnDefinitions(TestCase):
         "Assignee",
         "Code",
         "Workflow",
-        "Objects",
         "Delete",
     }
     self.assertEqual(expected_names, display_names)
@@ -980,7 +979,8 @@ class TestGetWorkflowObjectColumnDefinitions(TestCase):
     """ test default headers for Task Group Task """
     definitions = get_object_column_definitions(wf_models.TaskGroupTask)
     display_names = {val["display_name"] for val in definitions.values()}
-    expected_names = {
+    mapping_names = get_mapping_names(wf_models.TaskGroupTask.__name__)
+    element_names = {
         "Summary",
         "Task Type",
         "Assignee",
@@ -991,6 +991,7 @@ class TestGetWorkflowObjectColumnDefinitions(TestCase):
         "Code",
         "Delete",
     }
+    expected_names = element_names.union(mapping_names)
     self.assertEqual(expected_names, display_names)
     vals = {val["display_name"]: val for val in definitions.values()}
     self.assertTrue(vals["Summary"]["mandatory"])

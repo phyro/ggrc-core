@@ -1,25 +1,28 @@
-Object type,,,,,,,,
-Person,name,email,company,role,,,,
-,user 1,user1@ggrc.com,google,Admin ,,,,
-,,,,,,,,
-Object type,,,,,,,,
-Workflow,code*,title*,description ,manager,frequency,force real-time email updates,custom email message,
-,wf-1,wf-1,test,user1@ggrc.com,One time,no,this is super custom ,
-,,,,,,,,
-Object type,,,,,,,,
-Task Group,code*,Summary*,details,assignee,workflow*,Objects,,
-,tg-1,tg-1,test,user1@ggrc.com,wf-1,"Objective: obj-1
-objective : obj-3",,
-,,,,,,,,
-Object type,,,,,,,,
-Task,code*,Summary*,task group,task description,assignee*,task type,start,end
-,t-1,task for wf-1,tg-1,test,user1@ggrc.com,Rich text,7/1/2015,7/15/2015
-,t-2,task for wf-2,tg-1,test,user1@ggrc.com,Rich text,7/10/15,12/30/16
-,t-3,checkbox task,tg-1,"ch1, ch2 , some checkbox 3",user1@ggrc.com,Checkboxes,7/10/16,12/30/17
-,t-4,dropdow task,tg-1,"option 1, another option ,   o3",user1@ggrc.com,Dropdown,7/10/17,12/30/18
-,,,,,,,,
-Object type,,,,,,,,
-objective,code*,title*,description,owner,state,notes,,
-,obj-1,obj-1,test,user1@ggrc.com,Draft,this is a note,,
-,obj-2,obj-2,test,user1@ggrc.com,Final,this is a note,,
-,obj-3,obj-3,test,user1@ggrc.com,Effective,this is a note,,
+Object type,,,,,,,,,
+Person,name,email,company,role,,,,,
+,user 1,user1@ggrc.com,google,Admin ,,,,,
+,,,,,,,,,
+Object type,,,,,,,,,
+Workflow,code*,title*,description ,manager,frequency,force real-time email updates,custom email message,,
+,wf-1,wf-1,test,user1@ggrc.com,One time,no,this is super custom ,,
+,,,,,,,,,
+Object type,,,,,,,,,
+Task Group,code*,Summary*,details,assignee,workflow*,,,,
+,tg-1,tg-1,test,user1@ggrc.com,wf-1,,,,
+,,,,,,,,,
+Object type,,,,,,,,,
+Task,code*,Summary*,task group,task description,assignee*,task type,start,end,map:objective
+,t-1,task for wf-1,tg-1,test,user1@ggrc.com,Rich text,7/1/2015,7/15/2015,"obj-1
+obj-3"
+,t-2,task for wf-2,tg-1,test,user1@ggrc.com,Rich text,7/10/15,12/30/16,"obj-1
+obj-3"
+,t-3,checkbox task,tg-1,"ch1, ch2 , some checkbox 3",user1@ggrc.com,Checkboxes,7/10/16,12/30/17,"obj-1
+obj-3"
+,t-4,dropdow task,tg-1,"option 1, another option ,   o3",user1@ggrc.com,Dropdown,7/10/17,12/30/18,"obj-1
+obj-3"
+,,,,,,,,,
+Object type,,,,,,,,,
+objective,code*,title*,description,owner,state,notes,,,
+,obj-1,obj-1,test,user1@ggrc.com,Draft,this is a note,,,
+,obj-2,obj-2,test,user1@ggrc.com,Final,this is a note,,,
+,obj-3,obj-3,test,user1@ggrc.com,Effective,this is a note,,,
