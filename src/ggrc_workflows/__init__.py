@@ -592,16 +592,20 @@ def handle_cycle_task_group_object_task_put(
     elif obj.status == 'InProgress':
       os_state = "UnderReview"
 
-    for tgobj in obj.task_group_task.task_group.objects:
-      old_status = tgobj.status
-      set_internal_object_state(tgobj, os_state, status)
+    objs_related_as_source = [r.source
+                              for r in obj.task_group_task.related_sources]
+    objs_related_as_destination = [r.destination
+                              for r in obj.task_group_task.related_destinations]
+    for related_object in objs_related_as_source + objs_related_as_destination:
+      old_status = related_object.status
+      set_internal_object_state(related_object, os_state, status)
       Signals.status_change.send(
-          tgobj.__class__,
-          obj=tgobj,
-          new_status=tgobj.status,
+          related_object.__class__,
+          obj=related_object,
+          new_status=related_object.status,
           old_status=old_status
       )
-      db.session.add(tgobj)
+      db.session.add(related_object)
     db.session.flush()
 
 

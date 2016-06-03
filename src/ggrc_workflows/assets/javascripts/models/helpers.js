@@ -112,13 +112,17 @@ can.Observe("CMS.ModelHelpers.ApprovalWorkflow", {
                 title: "Object review for "
                         + that.original_object.constructor.title_singular
                         + ' "' + that.original_object.title + '"'
-              }).save(),
-              new CMS.Models.TaskGroupObject({
-                task_group: tg,
-                object: that.original_object,
-                context: wf.context
               }).save()
             );
+        }).then(function (wf, tgt) {
+          return $.when(
+            wf,
+            new CMS.Models.Relationship({
+              source: tgt,
+              destination: that.original_object,
+              context: wf.context
+            }).save()
+          );
         });
       } else {
         ret = $.when(
