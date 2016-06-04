@@ -55,6 +55,11 @@ class TestWorkflowObjectsImport(TestCase):
     self.assertEqual(task2.end_date, date(2016, 12, 30))
     self.assertIn("ch2", task3.response_options)
     self.assertIn("option 1", task4.response_options)
+    # check that tasks have relationships to objectives
+    self.assertEqual(len(task2.related_sources + task2.related_destinations),
+                     3)
+    self.assertEqual(len(task3.related_sources + task3.related_destinations),
+                     2)
 
   def test_import_task_date_format(self):
     """Test import of tasks for workflows
@@ -175,6 +180,30 @@ class TestWorkflowObjectsImport(TestCase):
 
     for task_type, slugs in task_types.items():
       self._test_task_types(task_type, slugs)
+
+    # test task relationships
+    task_relationship_types = {
+      "task-1": ["Policy", "Regulation"],
+      "task-2": ["Objective"],
+      "task-3": [],
+      "task-4": [],
+      "task-5": [],
+      "task-6": ["Policy"] * 2 + ["Contract"] * 5,
+      "task-7": ["Policy", "Regulation"],
+      "task-8": ["Objective"],
+      "task-9": [],
+      "task-10": [],
+      "task-11": []
+    }
+    tasks = db.session.query(TaskGroupTask).all()
+    for task in tasks:
+      task_rel_source_types = [r.source_type for r in task.related_sources]
+      task_rel_destination_types = [r.destination_type
+                                    for r in task.related_destinations]
+      task_rel_types = task_rel_source_types + task_rel_destination_types
+      self.assertEqual(sorted(task_rel_types),
+                       sorted(task_relationship_types[task.slug]))
+
 
   def _test_task_types(self, expected_type, task_slugs):
     """Test that all listed tasks have rich text type.
