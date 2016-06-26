@@ -147,6 +147,7 @@ dashboard-js-files:
   - components/add_comment/add_comment.js
   - components/object_cloner/object_cloner.js
   - components/object_counter/object_counter.js
+  - components/treeview/treeview.js
   #- d3.v2.js
   #- related_graph.js
 
@@ -271,6 +272,7 @@ dashboard-js-template-files:
   - components/rich_text/rich_text.mustache
   - components/datepicker/datepicker.mustache
   - components/object_counter/object_counter.mustache
+  - treeview/treeview.mustache
   - custom_attributes/modal_content.mustache
   - custom_attributes/info.mustache
   - custom_attribute_definitions/modal_content.mustache
@@ -441,6 +443,7 @@ dashboard-js-template-files:
   - import_export/export/filter_query.mustache
   - mapper/relevant_filter.mustache
   - quick_form/confirm_buttons.mustache
+  - treeview/treeview.mustache
 
 dashboard-css-files:
   - dashboard.css
