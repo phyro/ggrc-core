@@ -142,7 +142,9 @@
         cycle_task_groups: Direct(
           'CycleTaskGroup', 'cycle', 'cycle_task_groups'),
         reify_cycle_task_groups: Reify('cycle_task_groups'),
-        workflow: Direct('Workflow', 'cycles', 'workflow')
+        workflow: Direct('Workflow', 'cycles', 'workflow'),
+        cycle_task_group_object_tasks: Cross('cycle_task_groups',
+          'cycle_task_group_tasks')
       },
 
       CycleTaskGroup: {
@@ -561,18 +563,18 @@
     };
 
     currentWidgetDescriptor = {
-      content_controller: CMS.Controllers.TreeView,
-      content_controller_selector: 'ul',
-      widget_initial_content: '<ul class="tree-structure new-tree"></ul>',
+      content_controller: CMS.Controllers.Sprints,
       widget_id: 'current',
-      widget_name: 'Active Cycles',
+      widget_name: 'Sprints',
       widget_icon: 'cycle',
       content_controller_options: {
         draw_children: true,
         parent_instance: object,
-        model: 'Cycle',
-        mapping: 'current_cycle',
-        header_view: GGRC.mustache_path + '/cycles/tree_header.mustache',
+        model: CMS.Models.CycleTaskGroupObjectTask,
+        mapping: 'cycle_task_group_object_tasks',
+        header_view:
+          GGRC.mustache_path +
+          '/cycle_task_group_object_tasks/tree_header.mustache',
         add_item_view:
           GGRC.mustache_path +
           '/cycle_task_group_object_tasks/tree_add_item.mustache'

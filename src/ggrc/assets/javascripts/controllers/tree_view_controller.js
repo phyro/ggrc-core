@@ -730,7 +730,8 @@ CMS.Controllers.TreeLoader('CMS.Controllers.TreeView', {
   bind_header_events: function () {
     // Bind events for header elements
     var parent = this.element.parent();
-    // TODO: This is a workaround so we can toggle filter. We should refactor this ASAP.
+    // This is a workaround so we can toggle filter.
+    // We should refactor this ASAP.
     can.bind.call(
         parent.find('.filter-trigger > a'),
         'click',

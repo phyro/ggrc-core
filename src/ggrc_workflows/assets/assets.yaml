@@ -14,6 +14,9 @@ dashboard-js-files:
   - components/end_cycle.js
   - components/workflow_active.js
   - components/workflow_deactivate.js
+  - controllers/sprints_controller.js
+  - components/dropdown_mapping.js
+  - components/sprints_observer.js
 
 dashboard-js-spec-files:
 
@@ -91,3 +94,5 @@ dashboard-js-template-files:
   - cycle_task_group_object_tasks/current_tg_tree_footer.mustache
   - workflows/clone_modal_content.mustache
   - task_groups/clone_modal_content.mustache
+  - workflows/dropdown_mapping.mustache
+  - workflows/sprints.mustache

@@ -48,7 +48,10 @@
     tag: 'workflow-start-cycle',
     content: '<content/>',
     events: {
-      click: _generate_cycle
+      click: function () {
+        Stickyfill.kill();
+        _generate_cycle();
+      }
     }
   });
 
@@ -109,6 +112,11 @@
             workflow.attr('status', 'Active');
             return workflow.save();
           }, restore_button).then(function (workflow) {
+            if (workflow.cycles.length > 0) {
+              setTimeout(function () {
+                window.location.hash = 'current_widget';
+              }, 250);
+            }
             if (moment(workflow.next_cycle_start_date).isSame(moment(), 'day')) {
               return new CMS.Models.Cycle({
                 context: workflow.context.stub(),
